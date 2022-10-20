@@ -1,0 +1,12 @@
+#Directories
+venv/
+.idea/
+__pycache__/
+conda_env/
+.ipynb_checkpoints
+AlphaFold_Proteins/
+
+#Files
+
+
+#Other
