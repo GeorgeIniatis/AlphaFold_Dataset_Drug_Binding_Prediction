@@ -1,6 +1,7 @@
+from urllib.request import urlopen
+from Bio import SeqIO
 import json
 import urllib
-from urllib.request import urlopen
 import os
 import pandas as pd
 import numpy as np
@@ -8,6 +9,7 @@ import requests
 import ijson
 import base64
 import h5py
+import contactmaps
 
 BASE = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/"
 DESCRIPTORS = ['MolecularWeight', 'XLogP', 'ExactMass', 'MonoisotopicMass', 'TPSA', 'Complexity', 'Charge',
@@ -41,6 +43,20 @@ def fingerprint_to_binary(fingerprint):
         return None
 
 
+def get_contact_maps_as_numpy_files(pdf_files_path, path_to_save, threshold):
+    index = 0
+    for file_name in os.listdir(pdf_files_path):
+        accession = file_name.split("-")[1]
+
+        structure = contactmaps.get_structure(f"{pdf_files_path}{file_name}")
+        model = structure[0]
+        matrix = contactmaps.ContactMap(model, threshold=threshold).matrix
+
+        np.save(f"{path_to_save}/{accession}", matrix)
+
+        print(f"Processed: {index}")
+        index += 1
+
 def get_uniprot_sequence_embeddings_as_dataframe(path):
     data = []
     columns = ["Protein_Accession", "UniProt_Sequence_Embedding"]
@@ -60,12 +76,29 @@ def get_uniprot_sequence_embedding_for_protein(sequence_embeddings_sorted, acces
     return None
 
 
-def get_protein_accessions(path):
-    protein_accessions = []
-    for file_name in os.listdir(path):
-        protein_accessions.append(file_name.split("-")[1])
+def get_protein_accessions_and_sequences_as_dataframe(path):
+    data = []
+    columns = ["Protein_Accession", "Protein_Sequence"]
 
-    return pd.DataFrame(data=protein_accessions, columns=["Protein_Accession"])
+    index = 0
+    for file_name in os.listdir(path):
+        accession = file_name.split("-")[1]
+        with open(f"{path}{file_name}") as file:
+            for record in SeqIO.parse(file, 'pdb-seqres'):
+                sequence = record.seq
+                data.append([accession, sequence])
+        print(f"Processed: {index}")
+        index += 1
+
+    return pd.DataFrame(data=data, columns=columns)
+
+
+def get_sequence_for_protein(protein_accessions_and_sequences_sorted, accession):
+    index_retrieved = np.searchsorted(protein_accessions_and_sequences_sorted['Protein_Accession'], accession)
+    if index_retrieved < len(protein_accessions_and_sequences_sorted):
+        if accession == protein_accessions_and_sequences_sorted.iloc[index_retrieved]['Protein_Accession']:
+            return protein_accessions_and_sequences_sorted.iloc[index_retrieved]['Protein_Sequence']
+    return None
 
 
 def get_pubchem_protein_name_using_accession(accession):
@@ -160,19 +193,18 @@ def populate_drug_descriptors(csv_file, new_file_name):
 
     index_range = list(range(2000, 108000, 2000))
     for index, row in working_set.iterrows():
-        if index > 86000:
-            drug_cid = row["Drug_CID"]
-            drug_descriptors = get_chemical_descriptors(drug_cid)
+        drug_cid = row["Drug_CID"]
+        drug_descriptors = get_chemical_descriptors(drug_cid)
 
-            if drug_descriptors is not None:
-                for descriptor in DESCRIPTORS:
-                    working_set.at[index, descriptor] = drug_descriptors[descriptor]
-                print(f"Processed: {index}")
-            else:
-                print(f"Skipped: {index}")
+        if drug_descriptors is not None:
+            for descriptor in DESCRIPTORS:
+                working_set.at[index, descriptor] = drug_descriptors[descriptor]
+            print(f"Processed: {index}")
+        else:
+            print(f"Skipped: {index}")
 
-            if index in index_range:
-                load_to_csv(working_set, f"{new_file_name}_{index}")
+        if index in index_range:
+            load_to_csv(working_set, f"{new_file_name}_{index}")
 
     print("Loading everything to csv file")
     load_to_csv(working_set, f"{new_file_name}")
@@ -197,8 +229,24 @@ def populate_uniprot_sequence_embeddings(csv_file, new_file_name, path_to_embedd
     load_to_csv(working_set, f"{new_file_name}")
 
 
+def populate_protein_sequences(csv_file, new_file_name, path_to_pdb_files):
+    working_set = load_from_csv(csv_file)
+    protein_accessions_and_sequences = get_protein_accessions_and_sequences_as_dataframe("AlphaFold_Proteins/")
+    protein_accessions_and_sequences_sorted = protein_accessions_and_sequences.sort_values("Protein_Accession")
+
+    for index, row in working_set.iterrows():
+        protein_accession = row["Protein_Accession"]
+        sequence = get_sequence_for_protein(protein_accessions_and_sequences_sorted, protein_accession)
+
+        if sequence is not None:
+            working_set.at[index, "Protein_Sequence"] = sequence
+            print(f"Processed: {index}")
+        else:
+            print(f"Skipped: {index}")
+
+    print("Loading everything to csv file")
+    load_to_csv(working_set, f"{new_file_name}")
+
+
 if __name__ == "__main__":
-    populate_drug_descriptors("Unique_Drugs", "Unique_Drugs_Populated")
-    # populate_uniprot_sequence_embeddings("Unique_Proteins",
-    #                                      "Unique_Proteins_UniProt_Embeddings",
-    #                                      "Dataset_Files/uniprot_sequence_embeddings.h5")
+    get_contact_maps_as_numpy_files("AlphaFold_Proteins/", "Dataset_Files/Contact_Map_Files/", 10.0)

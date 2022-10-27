@@ -6,8 +6,10 @@ conda_env/
 .ipynb_checkpoints
 AlphaFold_Proteins/
 Dataset_Files/Backups
+Dataset_Files/Contact_Map_Files
+Dataset_Files/Unique_Proteins_UniProt_Embeddings_Sequences_Descriptors.csv
 
 #Files
-
+.Rhistory
 
 #Other
