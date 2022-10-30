@@ -79,6 +79,17 @@ def amino_acid_pssms_to_numpy_files(path, path_to_save):
             index += 1
 
 
+def sanity_check_dimensions(accession):
+    contact_map = np.load(f"Dataset_Files/Contact_Map_Files/{accession}.npy")
+    descriptors = np.load(f"Dataset_Files/Amino_Acid_Descriptors_And_PSSM/{accession}_Descriptors.npy")
+    pssm = np.load(f"Dataset_Files/Amino_Acid_Descriptors_And_PSSM/{accession}_PSSM.npy")
+
+    if contact_map.shape[0] == descriptors.shape[0] == pssm.shape[0]:
+        return True
+    else:
+        return False
+
+
 def get_sequences_as_FASTA_files(csv_file, path_to_save):
     working_set = load_from_csv(csv_file)
 
@@ -304,5 +315,6 @@ if __name__ == "__main__":
     #                              "Dataset_Files/Sequence_FASTA_Files/")
     # amino_acid_descriptors_to_numpy_files("Dataset_Files/Amino_Acid_Descriptors_Text_Files/",
     #                                       "Dataset_Files/Amino_Acid_Descriptors_And_PSSM/")
-    amino_acid_pssms_to_numpy_files("Dataset_Files/Amino_Acids_PSSM_Text_Files/",
-                                    "Dataset_Files/Amino_Acid_Descriptors_And_PSSM/")
+    # amino_acid_pssms_to_numpy_files("Dataset_Files/Amino_Acids_PSSM_Text_Files/",
+    #                                 "Dataset_Files/Amino_Acid_Descriptors_And_PSSM/")
+    print(sanity_check_dimensions("Q30201"))
