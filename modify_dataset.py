@@ -1,7 +1,6 @@
 from urllib.request import urlopen
 from Bio import SeqIO
 import json
-import urllib
 import os
 import pandas as pd
 import numpy as np
@@ -43,6 +42,56 @@ def fingerprint_to_binary(fingerprint):
         return None
 
 
+def amino_acid_descriptors_to_numpy_files(path, path_to_save):
+    index = 0
+    for file_name in os.listdir(path):
+        protein_accession = file_name.split(".")[0]
+        matrix = []
+        with open(f"{path}{file_name}") as file:
+            array = file.read().split(",")
+            array[-1] = array[-1].split("\n")[0]
+
+            for i in range(int(len(array) / 66)):
+                matrix.append(array[i * 66:(i + 1) * 66])
+
+            numpy_array = np.array(matrix, dtype=float)
+            np.save(f"{path_to_save}/{protein_accession}_Descriptors", numpy_array)
+
+            print(f"Processed: {index}")
+            index += 1
+
+
+def amino_acid_pssms_to_numpy_files(path, path_to_save):
+    index = 0
+    for file_name in os.listdir(path):
+        protein_accession = file_name.split(".")[0]
+        matrix = []
+        with open(f"{path}{file_name}") as file:
+            array = file.read().split()
+
+            for i in range(int(len(array) / 20)):
+                matrix.append(array[i * 20:(i + 1) * 20])
+
+            numpy_array = np.array(matrix, dtype=float)
+            np.save(f"{path_to_save}/{protein_accession}_PSSM", numpy_array)
+
+            print(f"Processed: {index}")
+            index += 1
+
+
+def get_sequences_as_FASTA_files(csv_file, path_to_save):
+    working_set = load_from_csv(csv_file)
+
+    for index, row in working_set.iterrows():
+        protein_accession = row["Protein_Accession"]
+        protein_sequence = row["Protein_Sequence"]
+
+        with open(f"{path_to_save}{protein_accession}.fasta", 'w') as file:
+            file.write(f">{protein_accession}\n{protein_sequence}\n")
+
+        print(f"Processed: {index}")
+
+
 def get_contact_maps_as_numpy_files(pdf_files_path, path_to_save, threshold):
     index = 0
     for file_name in os.listdir(pdf_files_path):
@@ -56,6 +105,7 @@ def get_contact_maps_as_numpy_files(pdf_files_path, path_to_save, threshold):
 
         print(f"Processed: {index}")
         index += 1
+
 
 def get_uniprot_sequence_embeddings_as_dataframe(path):
     data = []
@@ -231,7 +281,7 @@ def populate_uniprot_sequence_embeddings(csv_file, new_file_name, path_to_embedd
 
 def populate_protein_sequences(csv_file, new_file_name, path_to_pdb_files):
     working_set = load_from_csv(csv_file)
-    protein_accessions_and_sequences = get_protein_accessions_and_sequences_as_dataframe("AlphaFold_Proteins/")
+    protein_accessions_and_sequences = get_protein_accessions_and_sequences_as_dataframe(path_to_pdb_files)
     protein_accessions_and_sequences_sorted = protein_accessions_and_sequences.sort_values("Protein_Accession")
 
     for index, row in working_set.iterrows():
@@ -249,4 +299,10 @@ def populate_protein_sequences(csv_file, new_file_name, path_to_pdb_files):
 
 
 if __name__ == "__main__":
-    get_contact_maps_as_numpy_files("AlphaFold_Proteins/", "Dataset_Files/Contact_Map_Files/", 10.0)
+    # get_contact_maps_as_numpy_files("AlphaFold_Proteins/", "Dataset_Files/Contact_Map_Files/", 10.0)
+    # get_sequences_as_FASTA_files("Backups/AlphaFold_Proteins_Accessions_Names_UniProt_Embeddings_Sequences",
+    #                              "Dataset_Files/Sequence_FASTA_Files/")
+    # amino_acid_descriptors_to_numpy_files("Dataset_Files/Amino_Acid_Descriptors_Text_Files/",
+    #                                       "Dataset_Files/Amino_Acid_Descriptors_And_PSSM/")
+    amino_acid_pssms_to_numpy_files("Dataset_Files/Amino_Acids_PSSM_Text_Files/",
+                                    "Dataset_Files/Amino_Acid_Descriptors_And_PSSM/")

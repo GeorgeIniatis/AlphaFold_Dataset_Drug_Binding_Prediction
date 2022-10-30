@@ -8,6 +8,7 @@ AlphaFold_Proteins/
 Dataset_Files/Backups
 Dataset_Files/Contact_Map_Files
 Dataset_Files/Unique_Proteins_UniProt_Embeddings_Sequences_Descriptors.csv
+Dataset_Files/Amino_Acid_Descriptors_And_PSSM/
 
 #Files
 .Rhistory
