@@ -85,8 +85,9 @@ def sanity_check_dimensions(accession):
     contact_map = np.load(f"Dataset_Files/Contact_Map_Files/{accession}.npy")
     descriptors = np.load(f"Dataset_Files/Amino_Acid_Descriptors_And_PSSM/{accession}_Descriptors.npy")
     pssm = np.load(f"Dataset_Files/Amino_Acid_Descriptors_And_PSSM/{accession}_PSSM.npy")
+    embedding = np.load(f"Dataset_Files/Amino_Acid_Embeddings/{accession}.npy")
 
-    if contact_map.shape[0] == descriptors.shape[0] == pssm.shape[0]:
+    if contact_map.shape[0] == descriptors.shape[0] == pssm.shape[0] == embedding.shape[0]:
         return True
     else:
         return False
@@ -143,6 +144,17 @@ def get_uniprot_molecular_function_keywords(protein_accession):
             return None
     else:
         return None
+
+
+# Expects a directory of h5y files downloaded from UniProt holding the embeddings
+def get_uniprot_residue_embeddings_as_numpy_files(path, path_to_save):
+    index = 0
+    with h5py.File(path, "r") as file:
+        for protein_accession, embedding in file.items():
+            np.save(f"{path_to_save}/{protein_accession}", np.array(embedding))
+
+            print(f"Processed: {index}")
+            index += 1
 
 
 # Expects a directory of h5y files downloaded from UniProt holding the embeddings
@@ -364,5 +376,7 @@ if __name__ == "__main__":
     # amino_acid_pssms_to_numpy_files("Dataset_Files/Amino_Acids_PSSM_Text_Files/",
     #                                 "Dataset_Files/Amino_Acid_Descriptors_And_PSSM/")
     # print(sanity_check_dimensions("Q30201"))
-    populate_uniprot_molecular_function_keywords("Unique_Proteins_UniProt_Embeddings_Sequences_Descriptors",
-                                                 "Unique_Proteins_UniProt_Embeddings_Sequences_Descriptors_Molecular_Functions")
+    # populate_uniprot_molecular_function_keywords("Unique_Proteins_UniProt_Embeddings_Sequences_Descriptors",
+    #                                              "Unique_Proteins_UniProt_Embeddings_Sequences_Descriptors_Molecular_Functions")
+    get_uniprot_residue_embeddings_as_numpy_files("D:/AlphaFold_Project_Backups/per-residue.h5",
+                                                  "Dataset_Files/Amino_Acid_Embeddings/")

@@ -9,6 +9,7 @@ Dataset_Files/Backups
 Dataset_Files/Contact_Map_Files
 Dataset_Files/Unique_Proteins_UniProt_Embeddings_Sequences_Descriptors_Molecular_Functions.csv
 Dataset_Files/Amino_Acid_Descriptors_And_PSSM/
+Dataset_Files/Amino_Acid_Embeddings/
 
 #Files
 .Rhistory
