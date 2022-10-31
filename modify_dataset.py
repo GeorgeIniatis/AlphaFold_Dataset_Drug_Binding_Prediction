@@ -42,6 +42,7 @@ def fingerprint_to_binary(fingerprint):
         return None
 
 
+# Expects a directory of txt files created by the Amino_Acid_Descriptors.R file
 def amino_acid_descriptors_to_numpy_files(path, path_to_save):
     index = 0
     for file_name in os.listdir(path):
@@ -61,6 +62,7 @@ def amino_acid_descriptors_to_numpy_files(path, path_to_save):
             index += 1
 
 
+# Expects a directory of txt files created by the Amino_Acid_Descriptors.R file
 def amino_acid_pssms_to_numpy_files(path, path_to_save):
     index = 0
     for file_name in os.listdir(path):
@@ -90,6 +92,7 @@ def sanity_check_dimensions(accession):
         return False
 
 
+# Expects a csv file that contains protein accessions and sequences
 def get_sequences_as_FASTA_files(csv_file, path_to_save):
     working_set = load_from_csv(csv_file)
 
@@ -103,7 +106,8 @@ def get_sequences_as_FASTA_files(csv_file, path_to_save):
         print(f"Processed: {index}")
 
 
-def get_contact_maps_as_numpy_files(pdf_files_path, path_to_save, threshold):
+# Expects a directory of AlphaFold protein pdb files
+def get_contact_maps_as_numpy_files(pdf_files_path, path_to_save, threshold=10.0):
     index = 0
     for file_name in os.listdir(pdf_files_path):
         accession = file_name.split("-")[1]
@@ -118,6 +122,30 @@ def get_contact_maps_as_numpy_files(pdf_files_path, path_to_save, threshold):
         index += 1
 
 
+def get_uniprot_molecular_function_keywords(protein_accession):
+    response = requests.get(
+        f"https://rest.uniprot.org/uniprotkb/search?query=accession:{protein_accession}&fields=keyword")
+
+    molecular_functions_list = []
+    if response.status_code == 200:
+        try:
+            keyword_dictionaries = response.json()["results"][0]["keywords"]
+
+            for dictionary in keyword_dictionaries:
+                if dictionary["category"] == "Molecular function":
+                    molecular_functions_list.append(dictionary["name"])
+
+            if molecular_functions_list:
+                return molecular_functions_list
+            else:
+                return None
+        except:
+            return None
+    else:
+        return None
+
+
+# Expects a directory of h5y files downloaded from UniProt holding the embeddings
 def get_uniprot_sequence_embeddings_as_dataframe(path):
     data = []
     columns = ["Protein_Accession", "UniProt_Sequence_Embedding"]
@@ -137,6 +165,7 @@ def get_uniprot_sequence_embedding_for_protein(sequence_embeddings_sorted, acces
     return None
 
 
+# Expects a directory of AlphaFold protein pdb files
 def get_protein_accessions_and_sequences_as_dataframe(path):
     data = []
     columns = ["Protein_Accession", "Protein_Sequence"]
@@ -290,6 +319,23 @@ def populate_uniprot_sequence_embeddings(csv_file, new_file_name, path_to_embedd
     load_to_csv(working_set, f"{new_file_name}")
 
 
+def populate_uniprot_molecular_function_keywords(csv_file, new_file_name):
+    working_set = load_from_csv(csv_file)
+
+    for index, row in working_set.iterrows():
+        protein_accession = row["Protein_Accession"]
+        molecular_functions_list = get_uniprot_molecular_function_keywords(protein_accession)
+
+        if molecular_functions_list is not None:
+            working_set.at[index, "UniProt_Molecular_Functions"] = json.dumps(molecular_functions_list)
+            print(f"Processed: {index}")
+        else:
+            print(f"Skipped: {index}")
+
+    print("Loading everything to csv file")
+    load_to_csv(working_set, f"{new_file_name}")
+
+
 def populate_protein_sequences(csv_file, new_file_name, path_to_pdb_files):
     working_set = load_from_csv(csv_file)
     protein_accessions_and_sequences = get_protein_accessions_and_sequences_as_dataframe(path_to_pdb_files)
@@ -317,4 +363,6 @@ if __name__ == "__main__":
     #                                       "Dataset_Files/Amino_Acid_Descriptors_And_PSSM/")
     # amino_acid_pssms_to_numpy_files("Dataset_Files/Amino_Acids_PSSM_Text_Files/",
     #                                 "Dataset_Files/Amino_Acid_Descriptors_And_PSSM/")
-    print(sanity_check_dimensions("Q30201"))
+    # print(sanity_check_dimensions("Q30201"))
+    populate_uniprot_molecular_function_keywords("Unique_Proteins_UniProt_Embeddings_Sequences_Descriptors",
+                                                 "Unique_Proteins_UniProt_Embeddings_Sequences_Descriptors_Molecular_Functions")
