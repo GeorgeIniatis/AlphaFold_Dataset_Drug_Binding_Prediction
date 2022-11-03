@@ -1,5 +1,7 @@
 from urllib.request import urlopen
 from Bio import SeqIO
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 import json
 import os
 import pandas as pd
@@ -23,6 +25,16 @@ DESCRIPTORS = ['MolecularWeight', 'XLogP', 'ExactMass', 'MonoisotopicMass', 'TPS
 DESCRIPTORS_STRING = ','.join(DESCRIPTORS)
 
 
+def load_to_pickle(working_set, new_file_name):
+    path = f"Dataset_Files/{new_file_name}.pkl"
+    working_set.to_pickle(path)
+
+
+def load_from_pickle(file_name):
+    path = f"Dataset_Files/{file_name}.pkl"
+    return pd.read_pickle(path)
+
+
 def load_to_csv(working_set, new_file_name):
     path = f"Dataset_Files/{new_file_name}.csv"
     working_set.to_csv(path, index=False)
@@ -31,6 +43,10 @@ def load_to_csv(working_set, new_file_name):
 def load_from_csv(csv_file):
     path = f"Dataset_Files/{csv_file}.csv"
     return pd.read_csv(path)
+
+
+def replace_with_nan(working_set, string_to_replace):
+    working_set.replace(string_to_replace, np.NaN, inplace=True)
 
 
 def fingerprint_to_binary(fingerprint):
@@ -293,7 +309,6 @@ def populate_dtis(csv_file, new_file_name):
 def populate_drug_descriptors(csv_file, new_file_name):
     working_set = load_from_csv(csv_file)
 
-    index_range = list(range(2000, 108000, 2000))
     for index, row in working_set.iterrows():
         drug_cid = row["Drug_CID"]
         drug_descriptors = get_chemical_descriptors(drug_cid)
@@ -305,11 +320,38 @@ def populate_drug_descriptors(csv_file, new_file_name):
         else:
             print(f"Skipped: {index}")
 
-        if index in index_range:
-            load_to_csv(working_set, f"{new_file_name}_{index}")
-
     print("Loading everything to csv file")
     load_to_csv(working_set, f"{new_file_name}")
+
+
+def populate_one_hot_encoding_fingerprint(csv_file, new_file_name):
+    working_set = load_from_csv(csv_file)
+    data = []
+    empty_row = [np.NaN for i in range(881)]
+    columns = [f"Fingerprint_Bit_{i + 1}" for i in range(881)]
+
+    for index, row in working_set.iterrows():
+        fingerprint = row["Fingerprint2D"]
+        if pd.notna(fingerprint):
+            fingerprint_binary = fingerprint_to_binary(fingerprint)
+            fingerprint_list = [int(i) for i in str(fingerprint_binary)]
+
+            # The first 32 bits are prefix,containing the bit length of the fingerprint (881 bits)
+            # The last 7 bits are padding
+            fingerprint_list_prefix_and_padding_removed = fingerprint_list[
+                                                          32:len(fingerprint_list) - 7]
+
+            data.append(fingerprint_list_prefix_and_padding_removed)
+        else:
+            data.append(empty_row)
+
+        print(f"Processed: {index}")
+
+    temp_dataframe = pd.DataFrame(data=data, columns=columns)
+    joined_set = working_set.join(temp_dataframe)
+
+    print("Loading everything to csv file")
+    load_to_csv(joined_set, new_file_name)
 
 
 def populate_uniprot_sequence_embeddings(csv_file, new_file_name, path_to_embeddings):
@@ -331,6 +373,29 @@ def populate_uniprot_sequence_embeddings(csv_file, new_file_name, path_to_embedd
     load_to_csv(working_set, f"{new_file_name}")
 
 
+def populate_uniprot_embedding_lists_to_individual_entries(csv_file, new_file_name):
+    working_set = load_from_csv(csv_file)
+    data = []
+    empty_row = [np.NaN for i in range(1024)]
+    columns = [f"UniProt_Embedding_{i + 1}" for i in range(1024)]
+
+    for index, row in working_set.iterrows():
+        uniprot_embeddings = row["UniProt_Sequence_Embedding"]
+        if pd.notna(uniprot_embeddings):
+            uniprot_embeddings_list = json.loads(uniprot_embeddings)
+            data.append(uniprot_embeddings_list)
+        else:
+            data.append(empty_row)
+
+        print(f"Processed: {index}")
+
+    temp_dataframe = pd.DataFrame(data=data, columns=columns)
+    joined_set = working_set.join(temp_dataframe)
+
+    print("Loading everything to csv file")
+    load_to_csv(joined_set, new_file_name)
+
+
 def populate_uniprot_molecular_function_keywords(csv_file, new_file_name):
     working_set = load_from_csv(csv_file)
 
@@ -346,6 +411,24 @@ def populate_uniprot_molecular_function_keywords(csv_file, new_file_name):
 
     print("Loading everything to csv file")
     load_to_csv(working_set, f"{new_file_name}")
+
+
+def populate_one_hot_encoding_molecular_function_keywords(csv_file, new_file_name):
+    working_set = load_from_csv(csv_file)
+    working_set['UniProt_Molecular_Functions_JSON'] = ''
+
+    for index, row in working_set.iterrows():
+        molecular_functions_string = row['UniProt_Molecular_Functions']
+        if pd.notna(molecular_functions_string):
+            working_set.at[index, 'UniProt_Molecular_Functions_JSON'] = json.loads(molecular_functions_string)
+
+    one_hot_side_effects = working_set['UniProt_Molecular_Functions_JSON'].str.join('|').str.get_dummies().add_prefix(
+        'Molecular_Function_')
+    joined_set = working_set.join(one_hot_side_effects)
+    joined_set.drop(columns=['UniProt_Molecular_Functions_JSON'], inplace=True)
+
+    print("Loading everything to csv file")
+    load_to_csv(joined_set, f"{new_file_name}")
 
 
 def populate_protein_sequences(csv_file, new_file_name, path_to_pdb_files):
@@ -367,6 +450,28 @@ def populate_protein_sequences(csv_file, new_file_name, path_to_pdb_files):
     load_to_csv(working_set, f"{new_file_name}")
 
 
+# Tripeptide Composition Descriptors were incredibly sparse, so it was decided to reduce their dimensionality with PCA
+def tripeptide_composition_descriptors_dimensionality_reduction(csv_file, new_file_name):
+    working_set = load_from_csv(csv_file)
+
+    scaler = StandardScaler()
+    scaler.fit(working_set.loc[:, "AAA":"VVV"])
+    scaled_data = scaler.transform(working_set.loc[:, "AAA":"VVV"])
+
+    # Choose a number of components that captures 95% of the variance
+    pca = PCA(n_components=0.95)
+    pca.fit(scaled_data)
+
+    data = pca.transform(scaled_data)
+    columns = [f"Tripeptide_Composition_PCA_Component_{i + 1}" for i in range(data.shape[1])]
+    temp_dataframe = pd.DataFrame(data=data, columns=columns)
+
+    working_set = working_set.join(temp_dataframe)
+
+    print("Loading everything to csv file")
+    load_to_csv(working_set, new_file_name)
+
+
 if __name__ == "__main__":
     # get_contact_maps_as_numpy_files("AlphaFold_Proteins/", "Dataset_Files/Contact_Map_Files/", 10.0)
     # get_sequences_as_FASTA_files("Backups/AlphaFold_Proteins_Accessions_Names_UniProt_Embeddings_Sequences",
@@ -378,5 +483,13 @@ if __name__ == "__main__":
     # print(sanity_check_dimensions("Q30201"))
     # populate_uniprot_molecular_function_keywords("Unique_Proteins_UniProt_Embeddings_Sequences_Descriptors",
     #                                              "Unique_Proteins_UniProt_Embeddings_Sequences_Descriptors_Molecular_Functions")
-    get_uniprot_residue_embeddings_as_numpy_files("D:/AlphaFold_Project_Backups/per-residue.h5",
-                                                  "Dataset_Files/Amino_Acid_Embeddings/")
+    # get_uniprot_residue_embeddings_as_numpy_files("D:/AlphaFold_Project_Backups/per-residue.h5",
+    #                                               "Dataset_Files/Amino_Acid_Embeddings/")
+    # populate_drug_descriptors("Unique_Drugs_Populated", "Unique_Drugs_Populated_Fixed")
+    # populate_one_hot_encoding_fingerprint("Unique_Drugs_Populated", "Unique_Drugs_Populated_One_Hot")
+    # populate_one_hot_encoding_molecular_function_keywords("Unique_Proteins_Populated",
+    #                                                       "Unique_Proteins_Populated_One_Hot")
+    # populate_uniprot_embedding_lists_to_individual_entries("Unique_Proteins_Populated",
+    #                                                        "Unique_Proteins_Populated_Embedding_Entries")
+    tripeptide_composition_descriptors_dimensionality_reduction("Unique_Proteins_Populated",
+                                                                "Unique_Proteins_Populated_PCA")
