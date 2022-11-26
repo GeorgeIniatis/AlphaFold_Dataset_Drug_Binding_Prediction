@@ -1,10 +1,9 @@
 
 library("protr")
 
-setwd("C:/Users/jogeo/Desktop/Level_5_Project/AlphaFold_Dataset_Drug_Binding_Prediction/")
 getwd()
 
-working_set = read.csv("Dataset_Files/Unique_Proteins_UniProt_Embeddings_Sequences.csv")
+working_set = read.csv("Dataset_Files/Unique_Proteins_List.csv")
 
 for (row in 1:nrow(working_set)){
   protein_sequence = working_set[row,"Protein_Sequence"]
@@ -59,5 +58,5 @@ for (row in 1:nrow(working_set)){
 
 new_working_set = cbind(working_set,descriptors_dataframe)
 
-write.csv(new_working_set,"./Dataset_Files/Unique_Proteins_UniProt_Embeddings_Sequences_Descriptors.csv", 
+write.csv(new_working_set,"./Dataset_Files/Unique_Proteins_Populated.csv",
           row.names = FALSE)
