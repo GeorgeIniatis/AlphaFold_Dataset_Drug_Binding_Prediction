@@ -25,7 +25,7 @@ def amino_acid_descriptors_to_numpy_files(path, path_to_save):
     for file_name in os.listdir(path):
         protein_accession = file_name.split(".")[0]
         matrix = []
-        with open(f"{path}{file_name}") as file:
+        with open(f"{path}/{file_name}") as file:
             array = file.read().split(",")
             array[-1] = array[-1].split("\n")[0]
 
@@ -45,7 +45,7 @@ def amino_acid_pssms_to_numpy_files(path, path_to_save):
     for file_name in os.listdir(path):
         protein_accession = file_name.split(".")[0]
         matrix = []
-        with open(f"{path}{file_name}") as file:
+        with open(f"{path}/{file_name}") as file:
             array = file.read().split()
 
             for i in range(int(len(array) / 20)):
@@ -76,7 +76,7 @@ def get_contact_maps_as_numpy_files(pdf_files_path, path_to_save, threshold=10.0
         if "F1" in file_name:
             accession = file_name.split("-")[1]
 
-            structure = contactmaps.get_structure(f"{pdf_files_path}{file_name}")
+            structure = contactmaps.get_structure(f"{pdf_files_path}/{file_name}")
             model = structure[0]
             matrix = contactmaps.ContactMap(model, threshold=threshold).matrix
 
@@ -107,19 +107,19 @@ def sanity_check_dimensions(accession, print_information=False):
 
 if __name__ == "__main__":
     # Step 1: Get FASTA Files
-    # get_sequences_as_FASTA_files("AlphaFold_Proteins_Accessions_Names_Sequences_Duplicates_Dropped",
-    #                              "Dataset_Files/Protein_Graph_Data/raw/Sequence_FASTA_Files/")
+    get_sequences_as_FASTA_files("AlphaFold_Proteins_Accessions_Names_Sequences_Duplicates_Dropped",
+                                 "Dataset_Files/Protein_Graph_Data/raw/Sequence_FASTA_Files/")
 
     # Step 2: Run Amino_Acid_Descriptors.R
 
     # Step 3: Convert Amino Acid Descriptors txt files to numpy files
     print("Amino Acid Descriptors To Numpy")
-    amino_acid_descriptors_to_numpy_files("Dataset_Files/Protein_Graph_Data/raw/Amino_Acid_Descriptors_Text_Files/",
+    amino_acid_descriptors_to_numpy_files("Dataset_Files/Protein_Graph_Data/raw/Amino_Acid_Descriptors_Text_Files",
                                           "Protein_Graph_Data/raw/Amino_Acid_Descriptors_And_PSSM")
 
     # Step 4: Convert PSSMs txt files to numpy files
     print("PSSMs To Numpy")
-    amino_acid_pssms_to_numpy_files("Dataset_Files/Protein_Graph_Data/raw/Amino_Acids_PSSM_Text_Files/",
+    amino_acid_pssms_to_numpy_files("Dataset_Files/Protein_Graph_Data/raw/Amino_Acids_PSSM_Text_Files",
                                     "Protein_Graph_Data/raw/Amino_Acid_Descriptors_And_PSSM")
 
     # Step 5: Get UniProt Residue Embeddings
