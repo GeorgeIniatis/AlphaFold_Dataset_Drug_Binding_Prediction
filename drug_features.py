@@ -1,8 +1,7 @@
-import math
-
 from utils import *
 import requests
 import base64
+import math
 
 BASE = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/"
 DESCRIPTORS = ['MolecularWeight', 'XLogP', 'ExactMass', 'MonoisotopicMass', 'TPSA', 'Complexity', 'Charge',
@@ -49,6 +48,9 @@ def populate_drug_descriptors(csv_file, new_file_name):
         else:
             print(f"Skipped: {index}")
 
+        if (index != 0) and (index % 10000 == 0):
+            load_to_csv(working_set, f"{new_file_name}_{index}")
+
     print("Loading everything to csv file")
     load_to_csv(working_set, f"{new_file_name}")
 
@@ -92,6 +94,7 @@ def populate_one_hot_encoding_fingerprint(csv_file, new_file_name):
     load_to_csv(joined_set, new_file_name)
 
 
+# Takes a random sample of 100 drugs and checks that their descriptors match the ones in PubChem
 def sanity_check(csv_file, sample=100):
     working_set = load_from_csv(csv_file)
     sample = working_set.sample(sample)
@@ -114,5 +117,5 @@ def sanity_check(csv_file, sample=100):
 
 if __name__ == "__main__":
     populate_drug_descriptors("Unique_Drugs_List", "Unique_Drugs_Populated")
-    print(f"Sanity Check: {sanity_check('Unique_Drugs_Populated')}")
     populate_one_hot_encoding_fingerprint("Unique_Drugs_Populated", "Unique_Drugs_Populated_Fingerprints_Expanded")
+    print(f"Sanity Check: {sanity_check('Unique_Drugs_Populated')}")
