@@ -3,6 +3,7 @@ from protein_features import populate_uniprot_molecular_function_keywords
 from urllib.request import urlopen
 from utils import *
 import ijson
+import random
 
 BASE = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/"
 
@@ -10,15 +11,16 @@ BASE = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/"
 def get_pubchem_drug_interactions(accession, max_number_of_interactions=100):
     drug_interactions = []
     drugs_added = []
-    count = 0
 
     try:
         file = urlopen(BASE + f"protein/accession/{accession}/concise/json")
         rows = ijson.items(file, 'Table.Row.item')
+
         for row in rows:
             cell = row["Cell"]
             cid = cell[2]
-            if cid not in drugs_added:
+
+            if (cid not in drugs_added) and cid != "":
                 activity_outcome = cell[3]
                 if activity_outcome in ["Active", "Inactive"]:
                     activity_value = cell[5]
@@ -26,10 +28,11 @@ def get_pubchem_drug_interactions(accession, max_number_of_interactions=100):
 
                     drug_interactions.append([cid, activity_outcome, activity_value, activity_name])
                     drugs_added.append(cid)
-                    count += 1
-                    if count == max_number_of_interactions:
-                        return drug_interactions
-        return drug_interactions
+
+        if len(drug_interactions) > max_number_of_interactions:
+            return random.sample(drug_interactions, max_number_of_interactions)
+        else:
+            return drug_interactions
     except:
         return None
 
@@ -96,25 +99,24 @@ if __name__ == "__main__":
                 "AlphaFold_Proteins_Accessions_Names_Sequences_Duplicates_Dropped_UniProt_Embeddings_Molecular_Functions_Unknowns_Dropped")
 
     # Step 6: Populate Drug-Target Interactions for each protein
-    populate_dtis("AlphaFold_Proteins_Accessions_Names_Sequences_Duplicates_Dropped_Unknowns_Dropped",
-                  "Dataset_Populated_DTIs")
+    populate_dtis(
+        "AlphaFold_Proteins_Accessions_Names_Sequences_Duplicates_Dropped_UniProt_Embeddings_Molecular_Functions_Unknowns_Dropped",
+        "Dataset_Populated_DTIs")
 
-    # Step 7: Remove DTIs with Drug_CID == NaN
+    # Step 7: Separate the unique drugs and proteins
     dtis = load_from_csv("Dataset_Populated_DTIs")
-    dtis_nan_cid_dropped = dtis.dropna(subset=['Drug_CID'])
-    load_to_csv(dtis_nan_cid_dropped, "Dataset_Populated_DTIs_NaN_CID_Dropped")
 
-    # Step 8: Separate the unique drugs and proteins
-    dtis_nan_cid_dropped = load_from_csv("Dataset_Populated_DTIs_NaN_CID_Dropped")
-
-    unique_drugs = dtis_nan_cid_dropped["Drug_CID"].unique()
+    unique_drugs = dtis["Drug_CID"].unique()
     unique_drugs_dataframe = pd.DataFrame(data=unique_drugs, columns=["Drug_CID"])
     load_to_csv(unique_drugs_dataframe, "Unique_Drugs_List")
 
-    unique_proteins = dtis_nan_cid_dropped["Protein_Accession"].unique()
+    unique_proteins = dtis["Protein_Accession"].unique()
     proteins_without_duplicates_without_unknowns = load_from_csv(
         "AlphaFold_Proteins_Accessions_Names_Sequences_Duplicates_Dropped_UniProt_Embeddings_Molecular_Functions_Unknowns_Dropped")
     unique_proteins_dataframe = pd.DataFrame(data=unique_proteins, columns=["Protein_Accession"])
     unique_proteins_dataframe = unique_proteins_dataframe.merge(proteins_without_duplicates_without_unknowns,
                                                                 how="left")
     load_to_csv(unique_proteins_dataframe, "Unique_Proteins_List")
+
+
+
