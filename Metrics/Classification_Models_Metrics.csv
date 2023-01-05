@@ -1,0 +1,20 @@
+﻿Classification Models – Baseline,,,,,,
+Set,Model,Accuracy ,Recall,Precision,F1,Matthews Correlation Coefficient
+Training Set (99705 DTIs),Dummy Classifier,0.737154606,1,0.737154606,0.848691997,0
+Training Set (99705 DTIs),Logistic Regression,0.816709292,0.931372282,0.838024117,0.882235812,0.487892567
+Training Set (99705 DTIs),Linear Support Vector Classification,0.818534677,0.936569703,0.836738911,0.883844253,0.491389546
+Training Set (99705 DTIs),K-Nearest Neighbour Classifier,0.999969911,0.999959183,1,0.999979591,0.999922361
+Training Set (99705 DTIs),Decision Tree Classifier,0.999992578,0.999989875,1,0.999994937,0.999981038
+Training Set (99705 DTIs),Random Forest Classifier,0.999969911,0.999986394,0.999972789,0.999979591,0.999922354
+Training Set (99705 DTIs),Stochastic Gradient Descent Classifier,0.81701018,0.9314131,0.838307148,0.882410946,0.488864229
+,,,,,,
+,,,,,,
+Classification Models – Enhanced,,,,,,
+Set,Model,Accuracy ,Recall,Precision,F1,Matthews Correlation Coefficient
+Test Set (816 DTIs),Dummy Classifier,0.737154606,1,0.737154606,0.848691997,0
+Test Set (816 DTIs),Logistic Regression,0.729166667,0.863232682,0.771428571,0.814752724,0.324210954
+Test Set (816 DTIs),Linear Support Vector Classification,0.735294118,0.873889876,0.772370487,0.82,0.336162225
+Test Set (816 DTIs),K-Nearest Neighbour Classifier,0.753676471,0.831261101,0.81533101,0.823218997,0.417496014
+Test Set (816 DTIs),Decision Tree Classifier,0.889784679,0.9275942,0.921895469,0.924736055,0.719017896
+Test Set (816 DTIs),Random Forest Classifier,0.74877451,0.93250444,0.75867052,0.836653386,0.350992752
+Test Set (816 DTIs),Stochastic Gradient Descent Classifier,0.729166667,0.863232682,0.771428571,0.814752724,0.324210954
