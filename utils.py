@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 
 
 def load_to_pickle(working_set, path):
