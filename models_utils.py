@@ -1,15 +1,35 @@
+# General Imports
 from utils import *
+
+# Dimensionality Reduction
 from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+
+# Scalers
 from sklearn.preprocessing import StandardScaler
+
+# Metrics
 from sklearn.metrics import make_scorer
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score, matthews_corrcoef
 from sklearn.metrics import mean_absolute_error, r2_score
+
+# Interpretability
+import eli5
 from lime.lime_tabular import LimeTabularExplainer
+
+# Hyperparameter Tuning
 from skopt import BayesSearchCV
 from skopt.space import Real, Categorical, Integer
+
+# Feature & Model selection
+from sklearn.feature_selection import RFECV
+
+# Other
 from joblib import dump, load
 from sklearn.pipeline import Pipeline
-import eli5
+from sklearn.model_selection import train_test_split
+
+# Plotting
 import plotly.express as px
 
 
