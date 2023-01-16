@@ -3,11 +3,24 @@ from Bio import SeqIO
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 import requests
-import os
 import h5py
-import json
 
 BASE = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/"
+
+
+def one_hot_encoding_molecular_functions(working_set):
+    working_set['Molecular_Functions_JSON'] = ''
+
+    for index, row in working_set.iterrows():
+        molecular_functions_string = row['UniProt_Molecular_Functions']
+        working_set.at[index, 'Molecular_Functions_JSON'] = json.loads(molecular_functions_string)
+
+    one_hot_molecular_functions = working_set['Molecular_Functions_JSON'].str.join('|').str.get_dummies().add_prefix(
+        'Molecular_Function_')
+    joined_set = working_set.join(one_hot_molecular_functions)
+    joined_set.drop(columns=['Molecular_Functions_JSON'], inplace=True)
+
+    return joined_set
 
 
 def get_pubchem_protein_name_using_accession(accession):
