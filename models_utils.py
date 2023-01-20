@@ -16,6 +16,7 @@ from sklearn.metrics import mean_absolute_error, r2_score
 # Interpretability
 import eli5
 from lime.lime_tabular import LimeTabularExplainer
+from sklearn import tree
 
 # Hyperparameter Tuning
 from skopt import BayesSearchCV
@@ -28,33 +29,95 @@ from sklearn.feature_selection import RFECV
 from joblib import dump, load
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
+from graphviz import Source
+from IPython.display import SVG
 
 # Plotting
 import plotly.express as px
 
+template = "plotly_dark"
 
-def calculate_metrics_classification(y_true, y_pred):
+
+def calculate_metrics_classification(y_true, y_pred, print_results=True):
     recall = recall_score(y_true, y_pred)
     precision = precision_score(y_true, y_pred)
     f1 = f1_score(y_true, y_pred)
     accuracy = accuracy_score(y_true, y_pred)
     mcc = matthews_corrcoef(y_true, y_pred)
 
-    print(f"F1 score: {f1}")
-    print(f"Matthews Correlation Coefficient: {mcc}")
-    print(f"Accuracy score: {accuracy}")
-    print(f"Recall score: {recall}")
-    print(f"Precision score: {precision}")
+    if print_results:
+        print(f"F1 score: {f1}")
+        print(f"Matthews Correlation Coefficient: {mcc}")
+        print(f"Accuracy score: {accuracy}")
+        print(f"Recall score: {recall}")
+        print(f"Precision score: {precision}")
+    else:
+        return [recall, precision, f1, accuracy, mcc]
 
 
-def calculate_metrics_regression(y_true, y_pred):
+def calculate_metrics_regression(y_true, y_pred, print_results=True):
     mae = mean_absolute_error(y_true, y_pred)
     r2 = r2_score(y_true, y_pred)
 
-    # The closer to 1 the better
-    print(f"R2 Score: {r2}")
-    # The closer to 0 the better
-    print(f"Negated Mean Absolute Error: {-mae}")
+    if print_results:
+        # The closer to 1 the better
+        print(f"R2 Score: {r2}")
+        # The closer to 0 the better
+        print(f"Negated Mean Absolute Error: {-mae}")
+    else:
+        return [mae, r2]
+
+
+def get_confidence_intervals(model, X, y, sample_size, category, n_sample=1000, interval=95, print_iterator=False):
+    metrics = {}
+    alpha = 100 - interval
+
+    if category == "Classification":
+        metrics["Recall"] = []
+        metrics["Precision"] = []
+        metrics["F1"] = []
+        metrics["Accuracy"] = []
+        metrics["MCC"] = []
+
+        for i in range(n_sample):
+            if print_iterator:
+                print(i)
+            sample_indices = np.random.randint(0, len(X), sample_size)
+            X_sample = X[sample_indices]
+            y_sample = y[sample_indices]
+
+            metrics_list = calculate_metrics_classification(y_sample, model.predict(X_sample), print_results=False)
+            metrics["Recall"].append(metrics_list[0])
+            metrics["Precision"].append(metrics_list[1])
+            metrics["F1"].append(metrics_list[2])
+            metrics["Accuracy"].append(metrics_list[3])
+            metrics["MCC"].append(metrics_list[4])
+
+    elif category == "Regression":
+        metrics["MAE"] = []
+        metrics["R2"] = []
+
+        for i in range(n_sample):
+            if print_iterator:
+                print(i)
+            sample_indices = np.random.randint(0, len(X), sample_size)
+            X_sample = X[sample_indices]
+            y_sample = y[sample_indices]
+
+            metrics_list = calculate_metrics_regression(y_sample, model.predict(X_sample), print_results=False)
+            metrics["MAE"].append(metrics_list[0])
+            metrics["R2"].append(metrics_list[1])
+    else:
+        raise ValueError("Invalid category. Please choose 'Classification' or 'Regression'")
+
+    print(f"Metrics after {n_sample} bootstrapped samples of size {sample_size}")
+    print("--------------------------------------------------------")
+    for metric, values in metrics.items():
+        median = np.percentile(values, 50)
+        low_confidence_interval = np.percentile(values, alpha / 2)
+        high_confidence_interval = np.percentile(values, 100 - alpha / 2)
+        print(
+            f"Median {metric}: {median:.2f} with a {interval}% confidence interval of [{low_confidence_interval:.2f},{high_confidence_interval:.2f}]")
 
 
 def prediction_category_classification(df):
@@ -141,3 +204,15 @@ def get_lime_explainer(category, X_train, y_train=None):
                                     random_state=42)
     else:
         raise ValueError("Invalid category. Please choose 'Classification' or 'Regression'")
+
+
+def visualise_decision_tree(decision_tree, feature_names, class_names, dot_file_save_path):
+    if not os.path.exists("Dataset_Files/Baseline_Models/Classification/optimised_dtc.dot"):
+        tree.export_graphviz(decision_tree,
+                             feature_names=feature_names,
+                             class_names=class_names,
+                             out_file=dot_file_save_path,
+                             filled=True)
+
+    s = Source.from_file(dot_file_save_path, format='svg')
+    s.view()
