@@ -94,7 +94,7 @@ def get_confidence_intervals(model, X, y, sample_size, category, n_sample=1000, 
             metrics["MCC"].append(metrics_list[4])
 
     elif category == "Regression":
-        metrics["MAE"] = []
+        metrics["Negated-MAE"] = []
         metrics["R2"] = []
 
         for i in range(n_sample):
@@ -105,7 +105,7 @@ def get_confidence_intervals(model, X, y, sample_size, category, n_sample=1000, 
             y_sample = y[sample_indices]
 
             metrics_list = calculate_metrics_regression(y_sample, model.predict(X_sample), print_results=False)
-            metrics["MAE"].append(metrics_list[0])
+            metrics["Negated-MAE"].append(-metrics_list[0])
             metrics["R2"].append(metrics_list[1])
     else:
         raise ValueError("Invalid category. Please choose 'Classification' or 'Regression'")
