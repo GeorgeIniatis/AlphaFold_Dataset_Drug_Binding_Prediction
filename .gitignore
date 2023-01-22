@@ -4,10 +4,10 @@ venv/
 __pycache__/
 conda_env/
 .ipynb_checkpoints
-AlphaFold_Proteins/
 Dataset_Files/
 
 #Files
 .Rhistory
+.gitattributes
 
 #Other
