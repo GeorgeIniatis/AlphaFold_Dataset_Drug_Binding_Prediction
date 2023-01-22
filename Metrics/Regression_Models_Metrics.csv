@@ -1,0 +1,20 @@
+﻿Regression Models – Baseline,,Median (95% Confidence Interval),
+Set,Model,Negated Mean Absolute Error,R2
+Training Set (10956 DTIs),Dummy Regressor,-2.1 (-2.21 to -2.01),0 (-0.01 to 0)
+Training Set (10956 DTIs),Linear Regression,-1.04 (-1.12 to -0.97),0.63 (0.57 to 0.68)
+Training Set (10956 DTIs),Linear Support Vector Regression,-1.07 (-1.14 to -0.99),0.62 (0.57 to 0.67)
+Training Set (10956 DTIs),K-Nearest Neighbour Regressor,0 (0 to 0),1 (1 to 1)
+Training Set (10956 DTIs),Decision Tree Regressor,0 (0 to 0),1 (1 to 1)
+Training Set (10956 DTIs),Random Forest Regressor,,
+Training Set (10956 DTIs),Stochastic Gradient Descent Regressor,-0.95 (-1.06 to -0.86),0.55 (0.47 to 0.61)
+,,,
+,,,
+Classification Models – Baseline,,Median (95% Confidence Interval),
+Set,Model,Negated Mean Absolute Error,R2
+Test Set (102 DTIs),Dummy Regressor,-1.98 (-2.34 to -1.69),-0.03 (-0.33 to 0)
+Test Set (102 DTIs),Linear Regression,-3.63 (-4.45 to -2.85),-3.17 (-7.08 to -1.36)
+Test Set (102 DTIs),Linear Support Vector Regression,-2.44 (-3.01 to -1.92),-0.94 (-2.82 to -0.13)
+Test Set (102 DTIs),K-Nearest Neighbour Regressor,-1.54 (-2.09 to -1.06),-0.17 (-0.52 to 0.17)
+Test Set (102 DTIs),Decision Tree Regressor,-3.12 (-3.89 to -2.35),-2.33 (-5.80 to -0.83)
+Test Set (102 DTIs),Random Forest Regressor,,
+Test Set (102 DTIs),Stochastic Gradient Descent Regressor,-2.58 (-3.32 to -2.03),-1.23 (-3.39 to -0.29)
