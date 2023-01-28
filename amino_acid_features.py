@@ -87,22 +87,25 @@ def get_contact_maps_as_numpy_files(pdf_files_path, path_to_save, threshold=10.0
 
 
 def sanity_check_dimensions(accession, print_information=False):
-    contact_map = np.load(f"Dataset_Files/Protein_Graph_Data/raw/Contact_Map_Files/{accession}.npy")
-    descriptors = np.load(
-        f"Dataset_Files/Protein_Graph_Data/raw/Amino_Acid_Descriptors_And_PSSM/{accession}_Descriptors.npy")
-    pssm = np.load(f"Dataset_Files/Protein_Graph_Data/raw/Amino_Acid_Descriptors_And_PSSM/{accession}_PSSM.npy")
-    embedding = np.load(f"Dataset_Files/Protein_Graph_Data/raw/Amino_Acid_Embeddings/{accession}.npy")
+    try:
+        contact_map = np.load(f"Dataset_Files/Protein_Graph_Data/raw/Contact_Map_Files/{accession}.npy")
+        descriptors = np.load(
+            f"Dataset_Files/Protein_Graph_Data/raw/Amino_Acid_Descriptors_And_PSSM/{accession}_Descriptors.npy")
+        pssm = np.load(f"Dataset_Files/Protein_Graph_Data/raw/Amino_Acid_Descriptors_And_PSSM/{accession}_PSSM.npy")
+        embedding = np.load(f"Dataset_Files/Protein_Graph_Data/raw/Amino_Acid_Embeddings/{accession}.npy")
 
-    if print_information:
-        print(f"Contact Map Shape: {contact_map.shape}")
-        print(f"Amino Acid Descriptors Shape: {descriptors.shape}")
-        print(f"PSSM Shape: {pssm.shape}")
-        print(f"UniProt Embedding Shape: {embedding.shape}")
+        if print_information:
+            print(f"Contact Map Shape: {contact_map.shape}")
+            print(f"Amino Acid Descriptors Shape: {descriptors.shape}")
+            print(f"PSSM Shape: {pssm.shape}")
+            print(f"UniProt Per-Residue Embedding Shape: {embedding.shape}")
 
-    if contact_map.shape[0] == descriptors.shape[0] == pssm.shape[0] == embedding.shape[0]:
-        return True
-    else:
-        return False
+        if contact_map.shape[0] == descriptors.shape[0] == pssm.shape[0] == embedding.shape[0]:
+            return True
+        else:
+            return False
+    except FileNotFoundError:
+        return "FileNotFound"
 
 
 if __name__ == "__main__":
