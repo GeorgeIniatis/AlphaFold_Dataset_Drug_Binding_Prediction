@@ -1,5 +1,8 @@
 # General Imports
 from utils import *
+from sklearnex import patch_sklearn
+
+patch_sklearn()
 
 # Dimensionality Reduction
 from sklearn.decomposition import PCA
