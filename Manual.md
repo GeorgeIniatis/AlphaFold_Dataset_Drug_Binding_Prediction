@@ -1,14 +1,14 @@
 ## Directory Structure
 
 - `contactmaps/` contains the [nanoHUB tool](https://nanohub.org/resources/contactmaps) package that helped us calculate the protein contact maps
-- `Dataset_Files/` contains various CSV files that were used to construct the dataset, these can be largely ignored as a pickle file of the dataset is provided
+- `Dataset_Files/` contains various CSV files that were used to construct the dataset, these can be largely ignored as a pickled file of the dataset is provided
 - `Dataset_Files/AlphaFold_Proteins` contains all the pdb files downloaded from [AlphaFold](https://alphafold.ebi.ac.uk/download)
 - `Dataset_Files/Baseline_Models` & `Dataset_Files/Enhanced_Models` contain all our trained classification and regression models in the form of .joblib files
 - `Dataset_Files/Feature_Selection` contains all the numpy files regarding the feature selection process 
 - `Dataset_Files/Neural_Networks` contains the model checkpoint and its average train and validation losses
 - `Dataset_Files/Protein_Graph_Data` cotains all the files needed to construct the protein graphs and the protein graphs themselves
 - `Dataset_Files/Training_Test_Sets` contain the sets used in the training and testing phases for each model
-- `Molecular_Functions_Embedding_Model_&_Files/` contains two notebooks. one that was used to create the dataset used by the embedding model, and the embedding model itself
+- `Molecular_Functions_Embedding_Model_&_Files/` contains two notebooks. one that was used to create the dataset used by the embedding model, and the embedding model itself, as well as the protein embeddings calculcated, `protein_embeddings.pkl`, in the form of a pickled python dictionary
 - `Molecular_Functions_Embedding_Model_&_Files/Dataset_Files/` follows the same structure discussed 
 - `Metrics/` contains all the metrics gathered from our trained models in the form of CSV files
 - `R_Scripts/` contain the scriptrs that were used to calculate the amino acid and protein sequence descriptors
