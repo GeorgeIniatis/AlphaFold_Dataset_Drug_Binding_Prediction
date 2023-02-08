@@ -1,5 +1,3 @@
-# Manual
-
 ## Directory Structure
 
 - `contactmaps/` contains the [nanoHUB tool](https://nanohub.org/resources/contactmaps) package that helped us calculate the protein contact maps
@@ -19,7 +17,7 @@
 - `DTIs_NN` was the Jypter notebook used to train and test the neural network for DTI prediction
 -  `amino_acid_features.py`, `drug_features.py`, `protein_features.py`,`extract_dtis.py`, `models_utils.py` & `utils.py` contain helper functions that were used to create the various CSV files, the dataset and the models
 
-### Requirements
+## Requirements
 
 * Python: 3.9.16
 * PyTorch: 1.13.0
@@ -28,7 +26,7 @@
 * Packages: listed in `requirements.txt` 
 * Tested on Windows 11
 
-### Build steps
+## Build steps
 
 We would suggest the creation of an anaconda virtual environment and then running:
 
