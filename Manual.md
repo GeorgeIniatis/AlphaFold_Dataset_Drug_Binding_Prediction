@@ -12,7 +12,7 @@
 - `Molecular_Functions_Embedding_Model_&_Files/Dataset_Files/` follows the same structure discussed 
 - `Metrics/` contains all the metrics gathered from our trained models in the form of CSV files
 - `R_Scripts/` contain the scriptrs that were used to calculate the amino acid and protein sequence descriptors
-- `Dataset_Creation_&_Exploration.ipynb` was the Jupyter notebook used to bring together the various CSV files and create our dataset
+- `Dataset_Creation_&_Exploration.ipynb` was the Jupyter notebook used to bring together the various CSV files to create our dataset and split it into training and test sets
 - `Classification_Baseline_Models.ipynb`,`Regression_Baseline_Models.ipynb`,`Classification_Enhanced_Models.ipynb` & `Regression_Enhanced_Models.ipynb` were the Jupyter Notebooks used to train and test our various models
 - `DTIs_NN` was the Jypter notebook used to train and test the neural network for DTI prediction
 -  `amino_acid_features.py`, `drug_features.py`, `protein_features.py`,`extract_dtis.py`, `models_utils.py` & `utils.py` contain helper functions that were used to create the various CSV files, the dataset and the models
