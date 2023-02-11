@@ -15,6 +15,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import make_scorer
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score, matthews_corrcoef
 from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.metrics import confusion_matrix
+import plotly.figure_factory as ff
 
 # Interpretability
 import eli5
@@ -124,6 +126,14 @@ def get_confidence_intervals(model, X, y, sample_size, category, n_sample=1000, 
         high_confidence_interval = np.percentile(values, 100 - alpha / 2)
         print(
             f"Median {metric}: {median:.2f} with a {interval}% confidence interval of [{low_confidence_interval:.2f},{high_confidence_interval:.2f}]")
+
+
+def plot_confusion_matrix(y_true, y_pred):
+    confusion_matrix_array = confusion_matrix(y_true, y_pred)
+    fig = ff.create_annotated_heatmap(confusion_matrix_array, x=["Inactive", "Active"], y=["Inactive", "Active"],
+                                      colorscale="blues", showscale=True)
+    fig.update_layout(template=template, xaxis_title="Predicted Label", yaxis_title="True Label")
+    fig.show()
 
 
 def prediction_category_classification(df):
