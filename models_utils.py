@@ -31,6 +31,7 @@ from skopt.space import Real, Categorical, Integer
 from sklearn.feature_selection import RFECV
 
 # Other
+import pickle
 from joblib import dump, load
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
