@@ -173,14 +173,6 @@ def error_analysis_classification(y_pred, feature_selection_columns):
     # Joining dataframes
     error_analysis_dataframe = pd.concat([error_analysis_dataframe, pca_dataframe_2d], axis=1)
 
-    # Plot
-    fig = px.scatter(error_analysis_dataframe, x="PCA_Dimension_1", y="PCA_Dimension_2",
-                     color="Is the prediction correct?",
-                     symbol="Is the prediction correct?",
-                     hover_data=['MW', 'TPSA', 'XLogP', 'NHD', 'NHA', 'NRB', 'True Class', 'Prediction'],
-                     title="Correct Classifications vs Misclassifications")
-    fig.show()
-
     # Useful stats
     print(
         f"Number of correct classifications: {len(error_analysis_dataframe[error_analysis_dataframe['Is the prediction correct?'] == 'Correct'])}")
@@ -191,25 +183,42 @@ def error_analysis_classification(y_pred, feature_selection_columns):
     print(
         f"False Negatives (True class:1, Prediction:0): {len(error_analysis_dataframe[(error_analysis_dataframe['True Class'] == 1) & (error_analysis_dataframe['Prediction'] == 0)])}")
 
+    # Plot
+    fig = px.scatter(error_analysis_dataframe, x="PCA_Dimension_1", y="PCA_Dimension_2",
+                     color="Is the prediction correct?",
+                     symbol="Is the prediction correct?",
+                     hover_data=['Protein_Accession', 'Drug_CID', 'True Class', 'Prediction'],
+                     title="Correct Classifications vs Misclassifications",
+                     template=template)
+    fig.show()
+
     return error_analysis_dataframe.sort_values('Is the prediction correct?')
 
 
-def model_weights(model, category, feature_selection_columns):
+def get_model_weights(model, category, feature_selection_columns, dataframe=True):
     if category == "Classification":
-        return eli5.show_weights(model,
-                                 feature_names=feature_selection_columns,
-                                 target_names={1: "Active", 0: "Inactive"})
+        if dataframe:
+            return eli5.explain_weights_df(model,
+                                           feature_names=feature_selection_columns,
+                                           target_names={1: "Active", 0: "Inactive"})
+        else:
+            return eli5.show_weights(model,
+                                     feature_names=feature_selection_columns,
+                                     target_names={1: "Active", 0: "Inactive"})
     elif category == "Regression":
-        return eli5.show_weights(model, feature_names=feature_selection_columns)
+        if dataframe:
+            return eli5.explain_weights_df(model, feature_names=feature_selection_columns)
+        else:
+            return eli5.show_weights(model, feature_names=feature_selection_columns)
     else:
         raise ValueError("Invalid category. Please choose 'Classification' or 'Regression'")
 
 
-def get_lime_explainer(category, X_train, y_train=None):
+def get_lime_explainer(category, feature_selection_columns, X_train, y_train=None):
     if category == "Classification":
         return LimeTabularExplainer(training_data=X_train,
                                     mode='classification',
-                                    feature_names=list(X_train.columns),
+                                    feature_names=feature_selection_columns.to_list(),
                                     training_labels=y_train,
                                     class_names=['Inactive', 'Active'],
                                     random_state=42)
@@ -217,7 +226,7 @@ def get_lime_explainer(category, X_train, y_train=None):
     elif category == "Regression":
         return LimeTabularExplainer(training_data=X_train,
                                     mode='regression',
-                                    feature_names=list(X_train.columns),
+                                    feature_names=feature_selection_columns.to_list(),
                                     random_state=42)
     else:
         raise ValueError("Invalid category. Please choose 'Classification' or 'Regression'")
