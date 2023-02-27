@@ -146,14 +146,11 @@ def prediction_category_classification(df):
         return 'False Negative'
 
 
-def error_analysis_classification(y_pred, feature_selection_columns):
-    X_test_dataframe = load_from_pickle("Training_Test_Sets/Classification/X_test_feature_selection")
-    y_test_series = load_from_pickle("Training_Test_Sets/Classification/y_test")
-
+def error_analysis_classification(X_test, y_test, y_pred, feature_selection_columns):
     # Combining data into one dataframe
-    y_pred_series = pd.Series(y_pred, index=y_test_series.index)
+    y_pred_series = pd.Series(y_pred, index=y_test.index)
 
-    error_analysis_dataframe = pd.concat([X_test_dataframe, y_test_series], axis=1)
+    error_analysis_dataframe = pd.concat([X_test, y_test], axis=1)
     error_analysis_dataframe = pd.concat([error_analysis_dataframe, y_pred_series], axis=1)
     error_analysis_dataframe.rename(columns={"Activity_Binary": "True Class", 0: "Prediction"}, inplace=True)
     error_analysis_dataframe["Is the prediction correct?"] = error_analysis_dataframe.apply(
@@ -168,7 +165,7 @@ def error_analysis_classification(y_pred, feature_selection_columns):
     pca = PCA(n_components=2, random_state=0)
     pca.fit(scaled_data)
     pca_data = pca.transform(scaled_data)
-    pca_dataframe_2d = pd.DataFrame(pca_data, columns=["PCA_Dimension_1", "PCA_Dimension_2"], index=y_test_series.index)
+    pca_dataframe_2d = pd.DataFrame(pca_data, columns=["PCA_Dimension_1", "PCA_Dimension_2"], index=y_test.index)
 
     # Joining dataframes
     error_analysis_dataframe = pd.concat([error_analysis_dataframe, pca_dataframe_2d], axis=1)
