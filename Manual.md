@@ -30,11 +30,11 @@
 
 We would suggest the creation of an anaconda virtual environment and then running:
 
-`pip install -r requirements.txt`
+`pip3 install -r requirements.txt`
 
-`conda install pytorch==1.13.0 torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia`
+`pip3 install torch==1.13.0 torchvision torchaudio` or `conda install pytorch==1.13.0 torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia`
 
-`pip install torch-scatter torch-sparse torch-cluster torch-spline-conv torch-geometric==2.1.0 -f https://data.pyg.org/whl/torch-1.13.0+cu117.html`
+`pip3 install torch-scatter torch-sparse torch-cluster torch-spline-conv torch-geometric==2.1.0 -f https://data.pyg.org/whl/torch-1.13.0+cu117.html`
 
 
 
