@@ -35,16 +35,24 @@ with dataset_creation_process:
                 * Used PCA to reduce Tripeptide Descriptors from **8000** to **4813**
                 * Removed **20** entries for missing protein sequence descriptors. **Left with 11202 Proteins**
                 * Decided to simplify problem from multi-label to one-class classification. The molecular function we would be trying to predict would be "DNA Binding" as it was the most prevalent
+                """)
+
+    st.subheader("Training & Test Sets")
+    st.markdown("""
+                * No test set needed since this process is a means to an end to get protein structural embeddings and we do not really care of the network's predictive performance in this particular task
+                * Training Set Size: **11034 (168 lost due to incorrect graphs)**
+                """)
+
+    st.subheader("Feature Selection")
+    st.markdown("""
                 * Used [RFECV](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFECV.html) to reduce the protein sequence descriptors from **7757** to **144**
                 """)
 
 with model_discussion:
-    st.subheader("Model")
+    st.subheader("Neural Network")
     st.markdown("""
-                * The neural network would make use of a protein graph create and the protein sequence descriptors.
-                * The protein graph was constructed using the protein contact map, the amino acid descriptors and embeddings, and the position-specific scoring matrix (PSSM).
-                * No test set needed since this process is a means to an end to get protein structural embeddings and we do not really care of the network's predictive performance in this particular task
-                * Training Set Size: **11034 (168 lost due to incorrect graphs)**
+                * The neural network would make use of protein graphs protein sequence descriptors.
+                * Each protein graph was constructed using the protein contact map, the amino acid descriptors and embeddings, and the position-specific scoring matrix (PSSM).
                 """)
 
 with training_process:
