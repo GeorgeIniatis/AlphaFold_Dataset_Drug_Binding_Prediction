@@ -50,4 +50,5 @@ with about_us:
     st.markdown("""
                 - [GitHub Page](https://github.com/GeorgeIniatis/AlphaFold_Dataset_Drug_Binding_Prediction) 
                 - [GitHub Wiki](https://github.com/GeorgeIniatis/AlphaFold_Dataset_Drug_Binding_Prediction/wiki) 
+                - [Google Drive](https://drive.google.com/drive/folders/1VjRcpX_pHmt70I8neKLktm2N8S_dSptj?usp=share_link) - Holding all the trained models, datasets and embeddings
                 """)
