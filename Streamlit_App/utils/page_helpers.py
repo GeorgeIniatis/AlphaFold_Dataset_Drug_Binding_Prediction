@@ -92,13 +92,12 @@ def classification_result_column_section(model, model_name, descriptors, key):
         raise ValueError("Invalid key. Please choose 'Baseline_Models' or 'Enhanced_Models'")
 
     # LIME Explainer
-    # Removed for the moment due to RAM constraints
-    # if model_name not in ["Dummy Classifier", "Support Vector Classification"]:
-    #     explainer = get_lime_explainer("Classification", feature_selection_columns, X_train, y_train)
-    #     exp = explainer.explain_instance(descriptors.astype(np.float64), model.predict_proba, num_features=20)
-    #
-    #     st.markdown("##### Prediction Explanation")
-    #     st.pyplot(exp.as_pyplot_figure())
+    if model_name not in ["Dummy Classifier", "Support Vector Classification"]:
+        explainer = get_lime_explainer("Classification", feature_selection_columns, X_train, y_train)
+        exp = explainer.explain_instance(descriptors.astype(np.float64), model.predict_proba, num_features=20)
+
+        st.markdown("##### Prediction Explanation")
+        st.pyplot(exp.as_pyplot_figure())
 
     # ELI5 Model Weights
     if model_name not in ["Dummy Classifier", "K-Nearest Neighbour Classifier"]:
@@ -121,13 +120,12 @@ def regression_result_column_section(model, model_name, descriptors, key):
         raise ValueError("Invalid key. Please choose 'Baseline_Models' or 'Enhanced_Models'")
 
     # LIME Explainer
-    # Removed for the moment due to RAM constraints
-    # if model_name != "Dummy Regressor":
-    #     explainer = get_lime_explainer("Regression", feature_selection_columns, X_train, y_train)
-    #     exp = explainer.explain_instance(descriptors.astype(np.float64), model.predict, num_features=20)
-    #
-    #     st.markdown("##### Prediction Explanation")
-    #     st.pyplot(exp.as_pyplot_figure())
+    if model_name != "Dummy Regressor":
+        explainer = get_lime_explainer("Regression", feature_selection_columns, X_train, y_train)
+        exp = explainer.explain_instance(descriptors.astype(np.float64), model.predict, num_features=20)
+
+        st.markdown("##### Prediction Explanation")
+        st.pyplot(exp.as_pyplot_figure())
 
     # ELI5 Model Weights
     if model_name not in ["Dummy Classifier", "K-Nearest Neighbour Regressor", "Random Forest Regressor"]:
