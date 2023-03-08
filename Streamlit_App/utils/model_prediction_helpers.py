@@ -127,36 +127,58 @@ def load_model_from_drive(chosen_model, category, key):
 
         else:
             raise ValueError("Invalid Model.")
-    # elif key == "Enhanced_Models":
-    #     if chosen_model == "K-Nearest Neighbour Classifier":
-    #         url = "https://drive.google.com/uc?id="
-    #         response = requests.get(url)
-    #         model = load(BytesIO(response.content))
-    #
-    #     elif chosen_model == "Random Forest Classifier":
-    #         url = "https://drive.google.com/uc?id="
-    #         response = requests.get(url)
-    #         model = load(BytesIO(response.content))
-    #
-    #     elif chosen_model == "K-Nearest Neighbour Regressor":
-    #         url = "https://drive.google.com/uc?id="
-    #         response = requests.get(url)
-    #         model = load(BytesIO(response.content))
-    #
-    #     elif chosen_model == "Random Forest Regressor":
-    #         url = "https://drive.google.com/uc?id="
-    #         response = requests.get(url)
-    #         model = load(BytesIO(response.content))
-    #     else:
-    #         raise ValueError("Invalid Model.")
+    elif key == "Enhanced_Models":
+        if chosen_model == "K-Nearest Neighbour Classifier":
+            url = "https://drive.google.com/uc?id=1LAa8BfmUUTcsFVgdpPZXJYA-PX-cXg3f"
+
+        elif chosen_model == "Random Forest Classifier":
+            url = "https://drive.google.com/uc?id=1CGABR4W9b72pckwNMJt9ntq7VGypp7K8"
+
+        elif chosen_model == "K-Nearest Neighbour Regressor":
+            url = "https://drive.google.com/uc?id=1Kpv9vz5Pis-FQA5jjfmE8FweTnEyP6oy"
+
+        elif chosen_model == "Random Forest Regressor":
+            url = "https://drive.google.com/uc?id=1Y7wMX30WKrwEh_l0byAGf5HxiGM8jZDh"
+
+        else:
+            raise ValueError("Invalid Model.")
     else:
         raise ValueError("Invalid key. Please choose 'Baseline_Models' or 'Enhanced_Models'")
 
-    output = f"Streamlit_App/data/{key}/{category}/{classification_model_name_to_file[chosen_model]}"
-    gdown.download(url, output, quiet=False)
-    model = load(output)
+    if category == "Classification":
+        output = f"Streamlit_App/data/{key}/{category}/{classification_model_name_to_file[chosen_model]}"
+    elif category == "Regression":
+        output = f"Streamlit_App/data/{key}/{category}/{regression_model_name_to_file[chosen_model]}"
+    else:
+        raise ValueError("Invalid category. Please choose 'Classification' or 'Regression'")
+
+    try:
+        model = load(output)
+    except FileNotFoundError:
+        gdown.download(url, output, quiet=True)
+        model = load(output)
 
     return model
+
+
+def get_protein_descriptors(protein_accession, category, key):
+    if category == "Classification":
+        proteins = pd.read_pickle("Streamlit_App/data/Datasets/Classification_Proteins.pkl")
+        descriptors = proteins[proteins["Protein_Accession"] == protein_accession].loc[:, "LK":].squeeze()
+    elif category == "Regression":
+        proteins = pd.read_pickle("Streamlit_App/data/Datasets/Regression_Proteins.pkl")
+        descriptors = proteins[proteins["Protein_Accession"] == protein_accession].loc[:, "D":].squeeze()
+    else:
+        raise ValueError("Invalid category. Please choose 'Classification' or 'Regression'")
+
+    if key == "Enhanced_Models":
+        embeddings = pd.read_pickle("Streamlit_App/data/Datasets/Protein_Embeddings.pkl")
+        structure_embedding = embeddings[embeddings["Protein_Accession"] == protein_accession].loc[:,
+                              "Structure_Embedding_0":].squeeze()
+
+        descriptors = pd.concat(objs=[descriptors, structure_embedding])
+
+    return descriptors
 
 
 def get_chemical_descriptors(pubchem_cid, category):
@@ -204,8 +226,10 @@ def one_hot_encoding_fingerprint(descriptors, category):
 
     if category == "Classification":
         temp = temp[CLASSIFICATION_FINGERPRINT_BITS]
-    else:
+    elif category == "Regression":
         temp = temp[REGRESSION_FINGERPRINT_BITS]
+    else:
+        raise ValueError("Invalid category. Please choose 'Classification' or 'Regression'")
 
     joined_set = pd.concat(objs=[descriptors, temp])
     joined_set.drop(index=["Fingerprint2D"], inplace=True)

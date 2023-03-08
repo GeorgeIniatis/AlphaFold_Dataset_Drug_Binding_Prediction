@@ -18,16 +18,53 @@ def get_baseline_classification_sets():
 
 
 @st.cache_data
+def get_baseline_regression_sets():
+    X_train = pd.read_pickle("Streamlit_App/data/Training_Test_Sets/Regression/X_train_feature_selection.pkl")
+    X_train.drop(columns=["Protein_Accession", "Drug_CID", "Activity_Name"], inplace=True)
+    feature_selection_columns = X_train.loc[:, "MolecularWeight":].columns
+    X_train = X_train.to_numpy()
+
+    y_train = pd.read_pickle("Streamlit_App/data/Training_Test_Sets/Regression/y_train.pkl")
+    y_train.drop(columns=["Activity_Binary"], inplace=True)
+    y_train = y_train.to_numpy()
+
+    return X_train, y_train, feature_selection_columns
+
+
+@st.cache_data
 def get_enhanced_classification_sets():
     protein_embeddings_dataframe = pd.read_pickle("Streamlit_App/data/Datasets/Protein_Embeddings.pkl")
     X_train = pd.read_pickle("Streamlit_App/data/Training_Test_Sets/Classification/X_train_feature_selection.pkl")
     X_train = pd.merge(X_train.reset_index(), protein_embeddings_dataframe, on="Protein_Accession").set_index(
         'index')
     X_train.drop(columns=["Drug_CID", "Protein_Accession"], inplace=True)
-    feature_selection_columns = X_train.loc[:, "MolecularWeight":].columns
-    X_train = X_train.to_numpy()
 
     y_train = pd.read_pickle("Streamlit_App/data/Training_Test_Sets/Classification/y_train.pkl")
+    y_train = y_train[X_train.index]
+
+    feature_selection_columns = X_train.loc[:, "MolecularWeight":].columns
+
+    X_train = X_train.to_numpy()
+    y_train = y_train.to_numpy()
+
+    return X_train, y_train, feature_selection_columns
+
+
+@st.cache_data
+def get_enhanced_regression_sets():
+    protein_embeddings_dataframe = pd.read_pickle("Streamlit_App/data/Datasets/Protein_Embeddings.pkl")
+    X_train = pd.read_pickle("Streamlit_App/data/Training_Test_Sets/Regression/X_train_feature_selection.pkl")
+    X_train = pd.merge(X_train.reset_index(), protein_embeddings_dataframe, on="Protein_Accession").set_index(
+        'index')
+    X_train.drop(columns=["Protein_Accession", "Drug_CID", "Activity_Name"], inplace=True)
+
+    y_train = pd.read_pickle("Streamlit_App/data/Training_Test_Sets/Regression/y_train.pkl")
+    y_train = y_train.loc[X_train.index, :]
+    y_train.drop(columns=["Activity_Binary"], inplace=True)
+
+    feature_selection_columns = X_train.loc[:, "MolecularWeight":].columns
+
+    X_train = X_train.to_numpy()
     y_train = y_train.to_numpy()
 
     return X_train, y_train, feature_selection_columns

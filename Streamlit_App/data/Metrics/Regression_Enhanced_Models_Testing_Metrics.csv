@@ -1,0 +1,10 @@
+﻿Regression Models – Enhanced,,Median (95% Confidence Interval),
+Set,Model,Negated Mean Absolute Error,R2
+Test Set (95 DTIs),Dummy Regressor,-1.95 (-2.30 to -1.66),-0.03 (-0.29 to 0)
+Test Set (95 DTIs),Linear Regression,-130.78 (-157.40 to -105.42),-5231.97 (-11775.09 to -2645.58)
+Test Set (95 DTIs),Linear Support Vector Regression,-2.20 (-2.60 to -1.83),-0.34 (-1.44 to 0.05)
+Test Set (95 DTIs),K-Nearest Neighbour Regressor,-1.36 (-1.89 to -0.92),0.01 (-0.20 to 0.33)
+Test Set (95 DTIs),Decision Tree Regressor,-2.77 (-3.65 to -1.93),-2.35 (-6.89 to -0.61)
+Test Set (95 DTIs),Random Forest Regressor,-2.43 (-2.82 to -2.10),-0.50 (-1.79 to 0)
+Test Set (95 DTIs),Stochastic Gradient Descent Regressor,-1.75 (-2.18 to -1.34),-0.09 (-0.65 to 0.15)
+Test Set (102 DTIs),Neural Network,-1.56,0.09
