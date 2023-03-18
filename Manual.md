@@ -10,11 +10,15 @@
 - `Dataset_Files/Training_Test_Sets` contain the sets used in the training and testing phases for each model
 - `Molecular_Functions_Embedding_Model_&_Files/` contains two notebooks. one that was used to create the dataset used by the embedding model, and the embedding model itself, as well as the protein embeddings calculcated, `protein_embeddings.pkl`, in the form of a pickled python dictionary
 - `Molecular_Functions_Embedding_Model_&_Files/Dataset_Files/` follows the same structure discussed 
+- `Dissertation` contains the Overleaf project used to create our dissertation
+- `Diagrams/` contains all diagrams used in our dissertation and Streamlit app in their draw.io format
+- `Interim_Report` contains the Overleaf project used to create our report 
 - `Metrics/` contains all the metrics gathered from our trained models in the form of CSV files
-- `R_Scripts/` contain the scriptrs that were used to calculate the amino acid and protein sequence descriptors
+- `R_Scripts/` contains the scripts that were used to calculate the amino acid and protein sequence descriptors
+- `Streamlit_App/` contains anything to do with our web app
 - `Dataset_Creation_&_Exploration.ipynb` was the Jupyter notebook used to bring together the various CSV files to create our dataset and split it into training and test sets
 - `Classification_Baseline_Models.ipynb`,`Regression_Baseline_Models.ipynb`,`Classification_Enhanced_Models.ipynb` & `Regression_Enhanced_Models.ipynb` were the Jupyter Notebooks used to train and test our various models
-- `DTIs_NN` was the Jypter notebook used to train and test the neural network for DTI prediction
+- `DTIs_Classification_NN` and `DTIs_Regression_NN` were the Jupyter notebooks used to train and test the neural networks for DTI prediction
 -  `amino_acid_features.py`, `drug_features.py`, `protein_features.py`,`extract_dtis.py`, `models_utils.py` & `utils.py` contain helper functions that were used to create the various CSV files, the dataset and the models
 
 ## Requirements
