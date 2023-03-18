@@ -1,0 +1,80 @@
+\section{Progress}
+
+\begin{itemize}
+    \item 
+    Research questions laid out
+    \begin{itemize}
+        \item 
+        Can accurate machine learning models be trained using drug QSAR descriptors and protein sequence QSAR descriptors to predict whether a protein and a drug will bind together? How accurate are such models?
+        \item 
+        Does the addition of protein structure embeddings improve the predictive performance of our models?
+        \item
+        Are the structure embeddings created from the whole protein structure good enough, or should a more targeted approach involving the structure of protein pockets be used?
+        \item
+        Can the trained models predict previously unknown DTIs? 
+    \end{itemize}
+
+    \item
+    Dataset populated
+    \begin{itemize}
+        \item
+        This dataset will be used to train our baseline models and later augmented with the protein structure embeddings.
+        \item
+        Contains 165,155 DTIs after data cleaning. DTIs were retrieved from PubChem \citep{PubChem}.
+        \item
+        Class imbalance 3:1 favouring active DTIs.
+        \item
+        Contains drug descriptors and protein sequence descriptors. Drug descriptors were retrieved from PubChem \citep{PubChem} while protein descriptors were calculated using Protr \citep{ProtR_Paper}.
+        \item
+        Feature selection reduced the number of features from 6607 to 1044. Accomplished using Scikit-Learn's recursive feature elimination with 5-fold cross-validation \citep{RFECV} and a random forest classifier model.
+        \item
+        Optimised memory usage to 2.02 GBs.
+    \end{itemize}
+
+    \item
+    Baseline Models trained
+    \begin{itemize}
+        \item
+        Dataset was split into training and test sets.
+        \item
+        Optimised using BayesSearchCV \citep{BayesSearchCV} using 5-fold cross-validation
+        \item
+        Achieved very high, questionable, performance on the test set, which led to the identification of some problems, discussed in Subsection \ref{subsec:Problems Identified},  that will be rectified during the break and the 2nd semester.
+    \end{itemize}
+
+    \item
+    Neural Network ready to be trained
+    \begin{itemize}
+        \item
+        Will be used to create protein structure embeddings.
+        \item
+        Contact map, PSSM and amino acid descriptors were calculated for each unique protein.
+        \item
+        Amino acid embeddings extracted from UniProt for each unique protein.
+    \end{itemize}
+
+\end{itemize}
+
+\subsection{Problems Identified}
+\label{subsec:Problems Identified}
+
+\begin{itemize}
+        \item
+        Baseline models achieved a very high test set performance. Most likely due to data contamination between the two sets.
+        \begin{itemize}
+            \item
+            We are currently capping DTIs at 100 for each protein. This process could add some bias to the dataset if those drugs are sorted in any way. Therefore the DTI retrieval process will be run again with the drugs shuffled to remove any bias.
+            \item
+            The training and test set will be re-split, ensuring that no drug or protein present in the training set is present in the test set as well.
+        \end{itemize}
+
+        \item
+        Checking the robustness of the models using permutation testing is unfeasible, given their training times.
+        \begin{itemize}
+            \item 
+            Bootstrap confidence intervals could be used instead.
+        \end{itemize}
+\end{itemize}
+
+
+

@@ -1,0 +1,32 @@
+\section{Introduction}
+\label{sec:Introduction}
+
+This section will introduce the project on a high level and examine its motivations and objectives.
+
+\subsection{Motivation}
+\label{subsec:Motivation}
+
+Drug-target interactions (DTIs) refer to the interactions of chemical compounds and biological targets, proteins in our case, inside the human body \citep{Sachdev2019}. Given that both proteins and drugs are chemically active molecules in the bloodstream, it would make sense that they interact in some way \citep{DerangedPhysiology}. These interactions usually form an ever-changing, benign and reversible binding where both molecules move through the bloodstream interlocked together \citep{DerangedPhysiology}. The vast majority of drugs administered take this into account and use this process \citep{DerangedPhysiology}. A protein-bound drug is usually too big to pass through a biological membrane like that of a cell. Therefore only the unbound drug, usually in equilibrium with the bound drug, can pass through and produce the desired pharmacological effect, like the treatment of a disease, or the targeting of a tumour \citep{ProteinBindingOverview}. 
+
+Consequently, the degree of how much a drug binds to a protein can enhance or diminish the drug's effectiveness and performance. For example, minimally protein-bound drugs tend to penetrate tissue better and are excreted much faster from the body than those highly bound \citep{Scheife1989}. In contrast, highly protein-bound drugs, usually meaning that the protein binding is so impactful that we have to pay attention to it, tend to last much longer. This is because the protein acts as a drug "depot" that slowly releases the drug into the bloodstream, again keeping the bound and free drug in equilibrium \citep{DerangedPhysiology, ProteinBindingOverview}.
+
+DTIs play a crucial role in drug discovery and pharmacology. However, the experimental determination of these interactions with methods, such as fluorescence assays, is time-consuming and limited due to funding and the difficulty of purifying proteins \citep{Shar2016, Wang2020}. Past quantitative structure-relationship activity (QSAR) studies discussing protein-drug binding focused on testing thousands of drugs with just a single protein that they deemed important enough \citep{Colmenarejo2003, Estrada2006, Vallianatou2013}. These studies would often not even consider the protein's sequence or structural information, concentrating their efforts on the drug molecules and their descriptors. However, this is not what we aim to do in this study. Unwanted or unexpected DTIs could cause severe side effects, therefore, the creation of in silico machine learning models with high throughput that can quickly and confidently predict whether thousands of drugs and proteins bind together and how much could be crucial for medicinal chemistry and drug development, acting as a supplement to biological experiments \citep{Shar2016, Wang2020}.
+
+\subsection{Objectives}
+\label{subsec:Objectives}
+
+The project aims to gather publicly available data on known drug-target interactions and place them into a new curated dataset. Then, using this new dataset, train multiple machine learning models using simple QSAR descriptors derived from a drug's chemical properties and a protein's sequence and 3D structural information to predict whether they bind together. Each protein's 3D structure will be extracted from the AlphaFold protein structure database \citep{Jumper2021, Varadi2022} and one of the main challenges of the project will be in creating a simple embedding, which efficiently encodes the structural information of the protein, that can then be used in our training process. The models created should then be evaluated on robustness and performance, and a rudimentary system using these models should be constructed.
+
+\pagebreak
+
+
+% \textbf{Stuff that could be added}:
+
+% Sudden changes in protein binding, usually caused when multiple drugs are being used together or in quick succession of one another and one of the drugs is more highly bound than the others, instantaneously change the level of free drug concentration in one's bloodstream is frequently reported as a cause of adverse drug reactions. 
+
+
+% DeepMind recently published a vast set of supposedly high-accurate predictions of protein structures. These protein structures could be invaluable for identifying new uses for existing drugs known as drug repurposing. Quantitative structure-relationship activity (QSAR) is a method to use simpler descriptors of molecules as features to make predictions about activity, for example, drug binding. This project would look at ways to create descriptors for the AlphaFold proteins that can be used with drug descriptors to make predictions of drug binding. Practically, it would likely involve some deep learning to process the 3D structure data and learn embeddings that can be used in further machine learning prediction. There are several possible steps in this pipeline so the project would be fairly flexible in which parts to target.
+
+% \textbf{Could be moved to Process section}
+
+% To simplify the problem we first decided to treat it as binary, a drug can bind itself to a protein or not, even though as mentioned the reality is much more complicated and nuanced than that, as anything dealing with the human body. A drug can be highly bound to a particular protein and less so to another but in the context of this project we would still consider the drug to bind to both proteins. This was chosen to simplify the problem we would be trying to solve as we felt trying to predict how much a drug binds to a particular protein would add unnecessary complexity that would be unproductive for the project, especially in the early stages. This however, could be the subject of future work that could build upon the findings of this project if deemed successful.

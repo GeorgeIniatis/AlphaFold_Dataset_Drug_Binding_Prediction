@@ -9,11 +9,12 @@ introduction = st.container()
 dataset_creation_process = st.container()
 model_discussion = st.container()
 training_process = st.container()
+methodology = st.container()
 
 with introduction:
     st.subheader("Embedding Model")
     st.markdown("""
-                * In order to construct our embeddings we decided to construct a neural network that would be trained for a specific classification task involving as much proteins as possible in order to maximise the number of created embeddings
+                * In order to construct our embeddings we decided to create a neural network that would be trained for a specific classification task involving as much proteins as possible in order to maximise the number of created embeddings
                 * Once the model was trained we would then extract the protein structural embeddings from one of the layers
                 """)
 
@@ -62,4 +63,11 @@ with training_process:
                 * **The protein structural embeddings were extracted from the second dense linear layer before the concatenation with the protein sequence descriptors**
                 """)
     st.markdown(render_svg("Streamlit_App/data/Plots/Embeddings_NN_Architecture.svg"), unsafe_allow_html=True)
+
+with methodology:
+    st.subheader("Methodology Overview")
+    st.markdown("""
+                * The following plot provides a high-level view of the methodology used to construct our embeddings
+                """)
+    st.markdown(render_svg("Streamlit_App/data/Plots/Embeddings_Methodology.svg"), unsafe_allow_html=True)
 
