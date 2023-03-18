@@ -34,6 +34,6 @@ rejected by molecular docking simulations and actual experimental trials.
 
 
 **Important Links**
-- [Dissertation](https://drive.google.com/file/d/1PxtbJ2dam5OzJq-qUniG39A37cO22_3X/view?usp=share_link)
-- Google Drive holding our models and datasets ([Link](https://drive.google.com/drive/folders/1VjRcpX_pHmt70I8neKLktm2N8S_dSptj?usp=share_link))
+- Dissertation discussing the project's life-cycle ([Dissertation Link](https://drive.google.com/file/d/1PxtbJ2dam5OzJq-qUniG39A37cO22_3X/view?usp=share_link))
+- Google Drive holding our models and datasets ([Google Drive Link](https://drive.google.com/drive/folders/1VjRcpX_pHmt70I8neKLktm2N8S_dSptj?usp=share_link))
 - Streamlit web application created to showcase all the different models and our work ([Web App Link](https://alphafold-dataset-drug-binding-prediction.streamlit.app/))
