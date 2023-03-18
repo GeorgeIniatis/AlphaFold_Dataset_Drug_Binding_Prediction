@@ -41,7 +41,7 @@ with project_introduction:
             to the QSAR descriptors. This was naturally done in order to compare the effect, positive or negative, 
             of the created structural embeddings to a baseline.
             
-            Unfortunately, our embedding seemed to have little effect on our baseline models, 
+            Unfortunately, our embeddings seemed to have little effect on our baseline models, 
             which reasonably falls down to our embeddings creation process. Even though our embeddings did not have a 
             significant impact, our high-throughput models could still be used to uncover some 
             interesting relationships between drugs and proteins that could be later confirmed or 

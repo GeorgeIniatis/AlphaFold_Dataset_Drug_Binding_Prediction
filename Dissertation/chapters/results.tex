@@ -1,0 +1,134 @@
+\section{Results}
+
+This chapter will discuss the performance of our models and any important descriptors discovered.
+
+\subsection{Model Performance}
+
+\subsubsection{Classification Models}
+
+Tables \ref{tbl:baseline_classification} and \ref{tbl:enhanced_classification} showcase the predictive performance of our baseline and enhanced classification models and as we can clearly see our embeddings did not have much of an impact, except possibly in the cases of the logistic regression where they seem to have negatively impacted it and the random forest classifier where they seem to have slightly improved performance as we can see from their metrics, and particularly the MCC score.
+
+Our best models in both cases seem to be the K-nearest neighbour and random forest classifier, although all models, except the dummy ones obviously and the decision tree classifier, achieve close enough performances.
+
+We should mention that all models seem to have particular difficulty in recognising the negative class, meaning an inactive DTI, with actually the number of False Positives surpassing True Negatives which could be in part explained by the class imbalance present in our dataset. We expect that actively tackling this problem in future work will lead to a noticeable improvement in the predictive performance of the models.
+
+We also speculate that our choice of 10 \AA {} instead of the 8 \AA {} used to construct the contact maps by \citet{Jiang2020} may have played a significant role in our embeddings ineffectiveness. However, without any further experimentation this remains an unproven theory.
+
+\subsubsection{Regression Models}
+
+Tables \ref{tbl:baseline_regression} and \ref{tbl:enhanced_regression} showcase the predictive performance of our baseline and enhanced regression models and it could be argued that our embeddings in this case had a much more evident effect, positive in most cases, except obviously in the case of the linear regression model. However, given that the intervals are so spread out a decisive conclusion cannot be confidently reached.
+
+In the case of the enhanced models, our best models seem to be the K-nearest neighbour regressor and the neural network. As for the case of the baseline models given that all our models achieve a negative R2 score, meaning worse than random, evidenced by achieving worse scores than the dummy regressor, we feel that it would be pointless to point out any of them.
+
+There seem to be some promising results for the regression models and it would be interesting to see what performances they could achieve with a more extensive and diverse dataset than the one we used.
+
+\subsection{Important Descriptors}
+
+As we have previously discussed in Subsection \ref{subsubsec:Feature_Selection}, RFECV was used to find the most important drug and protein sequence descriptors. The intersection between the descriptors found to be important for both classification and regression includes the drug descriptors showcased in Table \ref{tbl:important_drug_descriptors} and the protein sequence descriptors showcased in Table \ref{tbl:important_protein_sequence_descriptors}.
+
+\begin{table*}
+    \tabcolsep=0.08cm
+    \begin{tabular}{llllll}
+    \toprule
+                                     Model &        Accuracy  &           Recall &        Precision &               F1 &              MCC \\
+    \midrule
+                          Dummy Classifier & 0.69 (0.65-0.73) & 1.00 (1.00-1.00) & 0.69 (0.65-0.73) & 0.82 (0.79-0.84) &          0 (0-0) \\
+                       Logistic Regression & 0.73 (0.69-0.77) & 0.86 (0.83-0.90) & 0.77 (0.73-0.81) & 0.82 (0.78-0.85) & 0.33 (0.24-0.42) \\
+      Linear Support Vector Classification & 0.74 (0.70-0.77) & 0.88 (0.84-0.91) & 0.77 (0.73-0.81) & 0.82 (0.79-0.85) & 0.34 (0.24-0.42) \\
+            K-Nearest Neighbour Classifier & 0.76 (0.72-0.79) & 0.83 (0.79-0.87) & 0.82 (0.78-0.86) & 0.82 (0.79-0.85) & 0.42 (0.33-0.50) \\
+                  Decision Tree Classifier & 0.64 (0.60-0.68) & 0.72 (0.67-0.76) & 0.75 (0.70-0.80) & 0.73 (0.70-0.77) & 0.18 (0.09-0.27) \\
+                  Random Forest Classifier & 0.75 (0.71-0.79) & 0.93 (0.90-0.96) & 0.76 (0.72-0.80) & 0.84 (0.81-0.86) & 0.36 (0.26-0.44) \\
+    Stochastic Gradient Descent Classifier & 0.73 (0.69-0.77) & 0.86 (0.82-0.90) & 0.77 (0.73-0.81) & 0.81 (0.78-0.84) & 0.32 (0.23-0.41) \\
+    \bottomrule
+    \end{tabular}
+    \caption{Testing set (816 DTIs) performance of baseline classification models}
+    \label{tbl:baseline_classification}
+\end{table*}
+
+
+\begin{table*}
+    \tabcolsep=0.08cm
+    \begin{tabular}{llllll}
+    \toprule
+                                     Model &        Accuracy  &           Recall &        Precision &               F1 &              MCC \\
+    \midrule
+                          Dummy Classifier & 0.68 (0.64-0.73) & 1.00 (1.00-1.00) & 0.68 (0.64-0.73) & 0.81 (0.78-0.84) &          0 (0-0) \\
+                       Logistic Regression & 0.72 (0.68-0.76) & 0.92 (0.89-0.95) & 0.73 (0.69-0.78) & 0.82 (0.79-0.84) & 0.28 (0.18-0.37) \\
+      Linear Support Vector Classification & 0.72 (0.68-0.76) & 0.85 (0.81-0.89) & 0.77 (0.73-0.81) & 0.80 (0.77-0.84) & 0.32 (0.22-0.41) \\
+            K-Nearest Neighbour Classifier & 0.75 (0.71-0.79) & 0.86 (0.82-0.90) & 0.79 (0.75-0.83) & 0.82 (0.79-0.85) & 0.40 (0.31-0.48) \\
+                  Decision Tree Classifier & 0.62 (0.58-0.66) & 0.69 (0.64-0.74) & 0.74 (0.69-0.79) & 0.71 (0.67-0.75) & 0.17 (0.07-0.26) \\
+                  Random Forest Classifier & 0.76 (0.72-0.80) & 0.92 (0.89-0.95) & 0.77 (0.73-0.81) & 0.84 (0.81-0.87) & 0.41 (0.32-0.50) \\
+    Stochastic Gradient Descent Classifier & 0.73 (0.69-0.77) & 0.92 (0.88-0.94) & 0.75 (0.70-0.79) & 0.82 (0.79-0.85) & 0.31 (0.22-0.40) \\
+                            Neural Network &              0.7 &              0.7 &             0.83 &             0.79 &             0.36 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Testing set (740 DTIs) performance of enhanced classification models}
+    \label{tbl:enhanced_classification}
+\end{table*}
+
+\begin{table*}
+    \centering
+    \begin{tabular}{lll}
+    \toprule
+                                    Model & Negated MAE &                     R2 \\
+    \midrule
+                          Dummy Regressor &      -1.99 (-2.38 to -1.67) &     -0.03 (-0.35 to 0) \\
+                        Linear Regression &      -3.73 (-4.52 to -2.95) & -3.26 (-7.18 to -1.40) \\
+         Linear Support Vector Regression &      -2.35 (-2.85 to -1.80) & -0.73 (-2.41 to -0.02) \\
+            K-Nearest Neighbour Regressor &      -1.53 (-2.11 to -1.05) &  -0.18 (-0.49 to 0.20) \\
+                  Decision Tree Regressor &      -3.12 (-3.91 to -2.38) & -2.39 (-6.16 to -0.87) \\
+                  Random Forest Regressor &      -2.48 (-2.83 to -2.13) & -0.46 (-2.02 to -0.01) \\
+    Stochastic Gradient Descent Regressor &      -2.50 (-3.12 to -1.93) & -1.13 (-2.93 to -0.21) \\
+    \bottomrule
+    \end{tabular}
+    \caption{Testing set (102 DTIs) performance of baseline regression models.}
+    \label{tbl:baseline_regression}
+\end{table*}
+
+\begin{table*}
+    \centering
+    \begin{tabular}{lll}
+    \toprule
+                                    Model &  Negated MAE &                               R2 \\
+    \midrule
+                          Dummy Regressor &       -1.95 (-2.30 to -1.66) &               -0.03 (-0.29 to 0) \\
+                        Linear Regression & -130.78 (-157.40 to -105.42) & -5231.97 (-11775.09 to -2645.58) \\
+         Linear Support Vector Regression &       -2.20 (-2.60 to -1.83) &            -0.34 (-1.44 to 0.05) \\
+            K-Nearest Neighbour Regressor &       -1.36 (-1.89 to -0.92) &             0.01 (-0.20 to 0.33) \\
+                  Decision Tree Regressor &       -2.77 (-3.65 to -1.93) &           -2.35 (-6.89 to -0.61) \\
+                  Random Forest Regressor &       -2.43 (-2.82 to -2.10) &               -0.50 (-1.79 to 0) \\
+    Stochastic Gradient Descent Regressor &       -1.75 (-2.18 to -1.34) &            -0.09 (-0.65 to 0.15) \\
+                           Neural Network &                        -1.56 &                             0.09 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Testing set (95 DTIs) performance of enhanced regression models.}
+    \label{tbl:enhanced_regression}
+\end{table*}
+
+\begin{table*}
+    \centering
+    \begin{tabular}{llll}
+    \toprule
+    MolecularWeight & XLogP & ExactMass & MonoisotopicMass \\
+    TPSA & Complexity & HBondDonorCount & HBondAcceptorCount \\
+    RotatableBondCount & HeavyAtomCount & AtomStereoCount & DefinedAtomStereoCount \\
+    Volume3D & XStericQuadrupole3D & YStericQuadrupole3D & ZStericQuadrupole3D \\ FeatureCount3D &  FeatureAcceptorCount3D & FeatureDonorCount3D & FeatureCationCount3D \\ FeatureRingCount3D & FeatureHydrophobeCount3D & ConformerModelRMSD3D & EffectiveRotorCount3D \\
+    ConformerCount3D & Fingerprint2D \\
+    \bottomrule
+    \end{tabular}
+    \caption{Important drug descriptors for both classification and regression.}
+    \label{tbl:important_drug_descriptors}
+\end{table*}
+
+\begin{table*}
+    \centering
+    \begin{tabular}{llll}
+    \toprule
+    CHOC760101.lag4.1 & hydrophobicity.Group3 & secondarystruct.Group1 & prop3.Tr1221 \\
+    prop5.Tr1221 & VS562 & Schneider.Xr.N \\
+    \bottomrule
+    \end{tabular}
+    \caption{Important protein sequence descriptors for both classification and regression.}
+    \label{tbl:important_protein_sequence_descriptors}
+\end{table*}
+

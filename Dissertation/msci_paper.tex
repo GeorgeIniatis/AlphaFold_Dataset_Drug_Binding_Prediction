@@ -1,0 +1,38 @@
+%% example.tex
+%% Jeremy Singer
+%% 16 Oct 12
+
+\documentclass{mpaper}
+
+% set bibliography styling
+\usepackage{natbib}
+\bibpunct{(}{)}{;}{a}{}{;}
+
+\usepackage{pgfgantt}
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+\begin{document}
+
+\title{Linking QSAR-Based Drug-Target prediction with AlphaFold}
+\author{George Iniatis }
+\matricnum{2329642i}
+\date{April 14, 2023}
+
+\maketitle
+
+\input{chapters/abstract}
+\input{chapters/introduction}
+\input{chapters/background}
+\input{chapters/design}
+\input{chapters/implementation}
+\input{chapters/results}
+\input{chapters/conclusion}
+\input{chapters/acknowledgments}
+
+%\setlength{\bibsep}{0pt plus 0.3ex}
+\pagebreak
+{\footnotesize
+\bibliographystyle{agsm}}
+\bibliography{msci_paper}
+\end{document}

@@ -1,0 +1,37 @@
+\section{Conclusion}
+
+This chapter will summarise our work and discuss valuable lessons learned and any potential future work.
+
+\subsection{Summary}
+
+Drug-target interactions (DTIs) refer to the interactions of chemical compounds and biological targets, proteins in our case, inside the human body \citep{Sachdev2019}. They play a crucial role in drug discovery and pharmacology. However, their experimental determination is time-consuming and limited due to funding and the difficulty of purifying proteins \citep{Shar2016, Wang2020}. Moreover, unwanted or unexpected DTIs could cause severe side effects. Therefore, the creation of in-silico machine learning models with high throughput that can quickly and confidently predict whether thousands of drugs and proteins bind together and how much could be crucial for medicinal chemistry and drug development, acting as a supplement to biological experiments \citep{Shar2016, Wang2020}.
+
+The project aimed to gather publicly available data on known DTIs and place them into a new curated dataset. Then, using this new dataset, train multiple machine learning models using simple QSAR descriptors derived from a drug's chemical properties and a protein's sequence and 3D structural information to predict whether they bind together. Our models were split into two categories, baseline and enhanced, with baseline using just the drug and protein sequence descriptors and the enhanced using our protein structural embeddings in addition to those descriptors.
+
+A dataset of 163,080 DTIs was gathered using a variety of databases, libraries and biochemical APIs, subsets of which were used to train both our classification and regression models, evaluated using dummy models, holdout test sets and model interpretability tools. Unfortunately, our embeddings seemed to have little effect on our baseline models, which reasonably falls down to our embeddings creation process.
+
+A Streamlit web app was also created to showcase our work and to allow non-technical users to use our models to make predictions. Model interpretability tools were also made available to allow users to better understand what led to a particular prediction by a model.
+
+Even though our embeddings did not have a significant impact, our high-throughput models could still be used to uncover some interesting relationships between drugs and proteins that could be later confirmed or rejected by molecular docking simulations and actual experimental trials.
+
+\subsection{Reflection}
+
+This project allowed us to work on a fascinating and challenging problem. Even though it could not be called a complete success, we certainly learned a lot, not only about machine learning techniques and best practices but also about bioinformatics in general.
+
+Looking back at the project we should have tried to mitigate the dataset class imbalance, examined further the errors of our models and experimented more with our embedding model's structure and the protein graph we used but also with other extraction methods, possibly utilising each protein's individual pockets instead of its structure as a whole to create the embeddings. However, overall we believe that we have conducted ourselves professionally and responsibly and presented our research in an accurate and unbiased manner. 
+
+\subsection{Future Work}
+
+Multiple project areas could be explored and improved in future work.
+
+The dataset could be improved by expanding it to include more entries with their binding affinity available and trying to reduce the class imbalance through various mitigation techniques. 
+
+A larger improved dataset could lead to improved models, but also different training, optimisation, deep learning architectures, and a thorough investigation with the help of professionals with chemical and biological knowledge into the already created models' errors and blind spots could also be used to create better, more accurate, and robust models.
+
+Finally, the embeddings creation process could also be improved by using a more targeted protein binding-pocket analysis approach instead of the one we used that utilised the protein structure as a whole, which proved ineffective.
+
+
+
+
+
+
