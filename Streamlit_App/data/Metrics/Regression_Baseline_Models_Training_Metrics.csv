@@ -1,9 +1,9 @@
 ﻿Regression Models – Baseline,,Median (95% Confidence Interval),
 Set,Model,Negated Mean Absolute Error,R2
-Training Set (10956 DTIs),Dummy Regressor,-2.11 (-2.21 to -2.01),0 (0 to 0)
-Training Set (10956 DTIs),Linear Regression,-1.02 (-1.10 to -0.95),0.64 (0.58 to 0.69)
-Training Set (10956 DTIs),Linear Support Vector Regression,-1.08 (-1.16 to -1.00),0.61 (0.56 to 0.66)
+Training Set (10956 DTIs),Dummy Regressor,-2.10 (-2.21 to -2.01),0 (0 to 0)
+Training Set (10956 DTIs),Linear Regression,-1.02 (-1.10 to -0.96),0.63 (0.58 to 0.68)
+Training Set (10956 DTIs),Linear Support Vector Regression,-1.08 (-1.16 to -1.00),0.61 (0.56 to 0.67)
 Training Set (10956 DTIs),K-Nearest Neighbour Regressor,0 (0 to 0),1 (1 to 1)
 Training Set (10956 DTIs),Decision Tree Regressor,0 (0 to 0),1 (1 to 1)
 Training Set (10956 DTIs),Random Forest Regressor,-0.33 (-0.36 to -0.30),0.95 (0.94 to 0.96)
-Training Set (10956 DTIs),Stochastic Gradient Descent Regressor,-0.89 (-0.99 to -0.78),0.53 (0.46 to 0.60)
+Training Set (10956 DTIs),Stochastic Gradient Descent Regressor,-0.89 (-0.98 to -0.79),0.53 (0.46 to 0.60)

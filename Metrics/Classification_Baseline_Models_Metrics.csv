@@ -11,10 +11,10 @@ Training Set (99705 DTIs),Stochastic Gradient Descent Classifier,0.82 (0.79-0.84
 ,,,,,,
 Classification Models – Baseline,,Median (95% Confidence Interval),,,,
 Set,Model,Accuracy ,Recall,Precision,F1,Matthews Correlation Coefficient
-Test Set (816 DTIs),Dummy Classifier,0.69 (0.65-0.73),1.00 (1.00-1.00),0.69 (0.65-0.73),0.82 (0.79-0.84),0 (0-0)
-Test Set (816 DTIs),Logistic Regression,0.73 (0.69-0.77),0.86 (0.83-0.90),0.77 (0.73-0.81),0.82 (0.78-0.85),0.33 (0.24-0.42)
-Test Set (816 DTIs),Linear Support Vector Classification,0.74 (0.70-0.77),0.88 (0.84-0.91),0.77 (0.73-0.81),0.82 (0.79-0.85),0.34 (0.24-0.42)
-Test Set (816 DTIs),K-Nearest Neighbour Classifier,0.76 (0.72-0.79),0.83 (0.79-0.87),0.82 (0.78-0.86),0.82 (0.79-0.85),0.42 (0.33-0.50)
-Test Set (816 DTIs),Decision Tree Classifier,0.64 (0.60-0.68),0.72 (0.67-0.76),0.75 (0.70-0.80),0.73 (0.70-0.77),0.18 (0.09-0.27)
-Test Set (816 DTIs),Random Forest Classifier,0.75 (0.71-0.79),0.93 (0.90-0.96),0.76 (0.72-0.80),0.84 (0.81-0.86),0.36 (0.26-0.44)
-Test Set (816 DTIs),Stochastic Gradient Descent Classifier,0.73 (0.69-0.77),0.86 (0.82-0.90),0.77 (0.73-0.81),0.81 (0.78-0.84),0.32 (0.23-0.41)
+Test Set (740 DTIs),Dummy Classifier,0.68 (0.64-0.72),1.00 (1.00-1.00),0.68 (0.64-0.72),0.81 (0.78-0.84),0 (0-0)
+Test Set (740 DTIs),Logistic Regression,0.73 (0.69-0.77),0.86 (0.83-0.90),0.77 (0.73-0.81),0.81 (0.78-0.84),0.34(0.24-0.43)
+Test Set (740 DTIs),Linear Support Vector Classification,0.73 (0.69-0.77),0.87 (0.84-0.91),0.77 (0.72-0.81),0.82 (0.78-0.85),0.34 (0.25-0.43)
+Test Set (740 DTIs),K-Nearest Neighbour Classifier,0.75 (0.71-0.79),0.83 (0.79-0.87),0.81 (0.77-0.85),0.82 (0.79-0.85),0.42 (0.33-0.51)
+Test Set (740 DTIs),Decision Tree Classifier,0.64 (0.60-0.68),0.71 (0.66-0.76),0.75 (0.70-0.79),0.73 (0.69-0.76),0.19 (0.10-0.28)
+Test Set (740 DTIs),Random Forest Classifier,0.75 (0.71-0.79),0.93 (0.90-0.96),0.76 (0.72-0.79),0.84 (0.81-0.86),0.37 (0.28-0.45)
+Test Set (740 DTIs),Stochastic Gradient Descent Classifier,0.73 (0.69-0.77),0.86 (0.83-0.90),0.77 (0.73-0.81),0.81 (0.78-0.84),0.33 (0.25-0.42)
