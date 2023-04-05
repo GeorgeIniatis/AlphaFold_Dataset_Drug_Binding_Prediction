@@ -1,8 +1,8 @@
 \section{Results}
 
-This chapter will discuss the performance of our models and any important descriptors discovered.
+\subsection{Models Performance}
 
-\subsection{Model Performance}
+We were unable to create embeddings for every single protein in our holdout test sets. Therefore, to get comparable results between the baseline and enhanced models, we had no choice but to remove those entries, marginally decreasing the size of our sets from 816 DTIs for the classification models to 740 and from 102 DTIs for the regression models to 95.
 
 \subsubsection{Classification Models}
 
@@ -10,11 +10,8 @@ Tables \ref{tbl:baseline_classification} and \ref{tbl:enhanced_classification} s
 
 Our best models in both cases seem to be the K-nearest neighbour and random forest classifier, although all models, except the dummy ones obviously and the decision tree classifier, achieve close enough performances.
 
-We should mention that all models seem to have particular difficulty in recognising the negative class, meaning an inactive DTI, with actually the number of False Positives surpassing True Negatives which could be in part explained by the class imbalance present in our dataset. We expect that actively tackling this problem in future work will lead to a noticeable improvement in the predictive performance of the models.
-
-We also speculate that our choice of 10 \AA {} instead of the 8 \AA {} used to construct the contact maps by \citet{Jiang2020} may have played a significant role in our embeddings ineffectiveness. However, without any further experimentation this remains an unproven theory.
-
 \subsubsection{Regression Models}
+\label{subsubsec:Regression_Performance}
 
 Tables \ref{tbl:baseline_regression} and \ref{tbl:enhanced_regression} showcase the predictive performance of our baseline and enhanced regression models and it could be argued that our embeddings in this case had a much more evident effect, positive in most cases, except obviously in the case of the linear regression model. However, given that the intervals are so spread out a decisive conclusion cannot be confidently reached.
 
@@ -22,26 +19,62 @@ In the case of the enhanced models, our best models seem to be the K-nearest nei
 
 There seem to be some promising results for the regression models and it would be interesting to see what performances they could achieve with a more extensive and diverse dataset than the one we used.
 
+\subsubsection{Model Bias}
+
+All classification models, regardless of type, seem to have particular difficulty in recognising the negative class, meaning an inactive DTI, with actually the number of False Positives surpassing True Negatives in most cases which could be in part explained by the class imbalance present in our dataset. We expect that actively tackling this problem in future work will lead to a noticeable improvement in the predictive performance of the models.
+
 \subsection{Important Descriptors}
 
 As we have previously discussed in Subsection \ref{subsubsec:Feature_Selection}, RFECV was used to find the most important drug and protein sequence descriptors. The intersection between the descriptors found to be important for both classification and regression includes the drug descriptors showcased in Table \ref{tbl:important_drug_descriptors} and the protein sequence descriptors showcased in Table \ref{tbl:important_protein_sequence_descriptors}.
+
+\bigskip
+\bigskip
+
+\subsection{Embeddings}
+
+We were able to produce 11,034 protein structural embeddings with 256 dimensions placed into a dictionary which was then pickled for easy storage and retrieval. To visualise them we used PCA to project them into a two-dimensional space and plotted them. 
+
+Looking at Figure \ref{fig:Embeddings_PCA} we can see that most of the embeddings are closely packed together with a few noticeable outliers. However, given the ineffectiveness of our embeddings we cannot draw any conclusions from their spread.
+
+\subsubsection{Performance}
+
+Given that our enhanced machine-learning models, which utilised the embeddings from our transfer learning process, and the neural networks which calculated the protein structural representations optimised specifically for DTI prediction achieved similar performance to that of the baseline models it most certainly appears that we have not efficiently encoded the structural information of proteins.
+
+Considering that we used a very similar deep learning architecture to process the protein contact maps with the successful study conducted by \citet{Jiang2020} we speculate that our choice of 10 \AA {} instead of the 8 \AA {} used by the study mentioned above may have played a significant role in our embeddings ineffectiveness. However, without any further experimentation this remains an unproven theory.
+
+It is also possible that the process used is better suited for predicting the binding affinity of DTIs, given the promising results of Subsection \ref{subsubsec:Regression_Performance}, instead of their binary relationship which may require a more complex representation and processing of protein structures. Such approaches include the studies of \citet{Sofia} and \citet{Lee2022} where they chose a more targeted strategy using each protein's binding pockets instead of its whole structure.
+
+\begin{figure}[!hb]
+    \centering
+    \includegraphics[width=1.0\linewidth]{images/Embeddings_PCA.pdf}    
+    \caption{PCA plot of our created protein structural embeddings after projecting them to a two-dimensional space. *Each scatter point is a unique embedding regardless of shape and colour.}
+    \label{fig:Embeddings_PCA} 
+\end{figure}
+
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+
 
 \begin{table*}
     \tabcolsep=0.08cm
     \begin{tabular}{llllll}
     \toprule
-                                     Model &        Accuracy  &           Recall &        Precision &               F1 &              MCC \\
+                                     Model &        Accuracy  &           Recall &        Precision &               F1 & MCC \\
     \midrule
-                          Dummy Classifier & 0.69 (0.65-0.73) & 1.00 (1.00-1.00) & 0.69 (0.65-0.73) & 0.82 (0.79-0.84) &          0 (0-0) \\
-                       Logistic Regression & 0.73 (0.69-0.77) & 0.86 (0.83-0.90) & 0.77 (0.73-0.81) & 0.82 (0.78-0.85) & 0.33 (0.24-0.42) \\
-      Linear Support Vector Classification & 0.74 (0.70-0.77) & 0.88 (0.84-0.91) & 0.77 (0.73-0.81) & 0.82 (0.79-0.85) & 0.34 (0.24-0.42) \\
-            K-Nearest Neighbour Classifier & 0.76 (0.72-0.79) & 0.83 (0.79-0.87) & 0.82 (0.78-0.86) & 0.82 (0.79-0.85) & 0.42 (0.33-0.50) \\
-                  Decision Tree Classifier & 0.64 (0.60-0.68) & 0.72 (0.67-0.76) & 0.75 (0.70-0.80) & 0.73 (0.70-0.77) & 0.18 (0.09-0.27) \\
-                  Random Forest Classifier & 0.75 (0.71-0.79) & 0.93 (0.90-0.96) & 0.76 (0.72-0.80) & 0.84 (0.81-0.86) & 0.36 (0.26-0.44) \\
-    Stochastic Gradient Descent Classifier & 0.73 (0.69-0.77) & 0.86 (0.82-0.90) & 0.77 (0.73-0.81) & 0.81 (0.78-0.84) & 0.32 (0.23-0.41) \\
+                          Dummy Classifier & 0.68 (0.64-0.72) & 1.00 (1.00-1.00) & 0.68 (0.64-0.72) & 0.81 (0.78-0.84) &                          0 (0-0) \\
+                       Logistic Regression & 0.73 (0.69-0.77) & 0.86 (0.83-0.90) & 0.77 (0.73-0.81) & 0.81 (0.78-0.84) &                  0.34(0.24-0.43) \\
+      Linear Support Vector Classification & 0.73 (0.69-0.77) & 0.87 (0.84-0.91) & 0.77 (0.72-0.81) & 0.82 (0.78-0.85) &                 0.34 (0.25-0.43) \\
+            K-Nearest Neighbour Classifier & 0.75 (0.71-0.79) & 0.83 (0.79-0.87) & 0.81 (0.77-0.85) & 0.82 (0.79-0.85) &                 0.42 (0.33-0.51) \\
+                  Decision Tree Classifier & 0.64 (0.60-0.68) & 0.71 (0.66-0.76) & 0.75 (0.70-0.79) & 0.73 (0.69-0.76) &                 0.19 (0.10-0.28) \\
+                  Random Forest Classifier & 0.75 (0.71-0.79) & 0.93 (0.90-0.96) & 0.76 (0.72-0.79) & 0.84 (0.81-0.86) &                 0.37 (0.28-0.45) \\
+    Stochastic Gradient Descent Classifier & 0.73 (0.69-0.77) & 0.86 (0.83-0.90) & 0.77 (0.73-0.81) & 0.81 (0.78-0.84) &                 0.33 (0.25-0.42) \\
     \bottomrule
     \end{tabular}
-    \caption{Testing set (816 DTIs) performance of baseline classification models}
+    \caption{Testing set (740 DTIs) performance of baseline classification models}
     \label{tbl:baseline_classification}
 \end{table*}
 
@@ -70,18 +103,18 @@ As we have previously discussed in Subsection \ref{subsubsec:Feature_Selection},
     \centering
     \begin{tabular}{lll}
     \toprule
-                                    Model & Negated MAE &                     R2 \\
+                                    Model & Negated Mean Absolute Error &                     R2 \\
     \midrule
-                          Dummy Regressor &      -1.99 (-2.38 to -1.67) &     -0.03 (-0.35 to 0) \\
-                        Linear Regression &      -3.73 (-4.52 to -2.95) & -3.26 (-7.18 to -1.40) \\
-         Linear Support Vector Regression &      -2.35 (-2.85 to -1.80) & -0.73 (-2.41 to -0.02) \\
-            K-Nearest Neighbour Regressor &      -1.53 (-2.11 to -1.05) &  -0.18 (-0.49 to 0.20) \\
-                  Decision Tree Regressor &      -3.12 (-3.91 to -2.38) & -2.39 (-6.16 to -0.87) \\
-                  Random Forest Regressor &      -2.48 (-2.83 to -2.13) & -0.46 (-2.02 to -0.01) \\
-    Stochastic Gradient Descent Regressor &      -2.50 (-3.12 to -1.93) & -1.13 (-2.93 to -0.21) \\
+                          Dummy Regressor &      -1.96 (-2.32 to -1.65) &     -0.03 (-0.43 to 0) \\
+                        Linear Regression &      -3.57 (-4.39 to -2.78) & -3.10 (-7.20 to -1.28) \\
+         Linear Support Vector Regression &      -2.34 (-2.82 to -1.83) & -0.70 (-2.49 to -0.01) \\
+            K-Nearest Neighbour Regressor &      -1.50 (-2.06 to -1.02) &  -0.17 (-0.60 to 0.22) \\
+                  Decision Tree Regressor &      -3.10 (-3.93 to -2.33) & -2.44 (-7.14 to -0.92) \\
+                  Random Forest Regressor &      -2.48 (-2.85 to -2.15) & -0.50 (-1.92 to -0.02) \\
+    Stochastic Gradient Descent Regressor &      -2.40 (-3.05 to -1.87) & -0.97 (-2.96 to -0.10) \\
     \bottomrule
     \end{tabular}
-    \caption{Testing set (102 DTIs) performance of baseline regression models.}
+    \caption{Testing set (95 DTIs) performance of baseline regression models.}
     \label{tbl:baseline_regression}
 \end{table*}
 

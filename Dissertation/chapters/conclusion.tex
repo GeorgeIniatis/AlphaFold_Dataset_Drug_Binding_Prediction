@@ -1,7 +1,5 @@
 \section{Conclusion}
 
-This chapter will summarise our work and discuss valuable lessons learned and any potential future work.
-
 \subsection{Summary}
 
 Drug-target interactions (DTIs) refer to the interactions of chemical compounds and biological targets, proteins in our case, inside the human body \citep{Sachdev2019}. They play a crucial role in drug discovery and pharmacology. However, their experimental determination is time-consuming and limited due to funding and the difficulty of purifying proteins \citep{Shar2016, Wang2020}. Moreover, unwanted or unexpected DTIs could cause severe side effects. Therefore, the creation of in-silico machine learning models with high throughput that can quickly and confidently predict whether thousands of drugs and proteins bind together and how much could be crucial for medicinal chemistry and drug development, acting as a supplement to biological experiments \citep{Shar2016, Wang2020}.
@@ -18,20 +16,18 @@ Even though our embeddings did not have a significant impact, our high-throughpu
 
 This project allowed us to work on a fascinating and challenging problem. Even though it could not be called a complete success, we certainly learned a lot, not only about machine learning techniques and best practices but also about bioinformatics in general.
 
-Looking back at the project we should have tried to mitigate the dataset class imbalance, examined further the errors of our models and experimented more with our embedding model's structure and the protein graph we used but also with other extraction methods, possibly utilising each protein's individual pockets instead of its structure as a whole to create the embeddings. However, overall we believe that we have conducted ourselves professionally and responsibly and presented our research in an accurate and unbiased manner. 
+Looking back at the project we should have tried to mitigate the dataset class imbalance, examined further the errors of our models and experimented more with our embedding model's structure and the protein graph we used but also with other extraction methods, possibly utilising each protein's individual pockets instead of its structure as a whole to create the embeddings. 
+
+\bigskip
+\bigskip
+\bigskip
 
 \subsection{Future Work}
 
 Multiple project areas could be explored and improved in future work.
 
-The dataset could be improved by expanding it to include more entries with their binding affinity available and trying to reduce the class imbalance through various mitigation techniques. 
+The dataset could be improved by expanding it to include more entries with their binding affinity available and trying to reduce the class imbalance. 
 
-A larger improved dataset could lead to improved models, but also different training, optimisation, deep learning architectures, and a thorough investigation with the help of professionals with chemical and biological knowledge into the already created models' errors and blind spots could also be used to create better, more accurate, and robust models.
+A larger improved dataset could lead to improved models, but also different training, optimisation, deep learning architectures, and a thorough investigation with the help of professionals with biochemical knowledge into the already created models' errors and blind spots could also be used to create better, more accurate, and robust models.
 
-Finally, the embeddings creation process could also be improved by using a more targeted protein binding-pocket analysis approach instead of the one we used that utilised the protein structure as a whole, which proved ineffective.
-
-
-
-
-
-
+Finally, the embeddings creation process could also be improved by using a different threshold to calculate our contact maps or a more targeted protein binding-pocket analysis approach instead of the one we used that utilised the protein structure as a whole, which proved ineffective.
