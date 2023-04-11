@@ -1,4 +1,4 @@
-# Linking QSAR-Based Drug Target Prediction with AlphaFold
+# Linking QSAR-Based Drug Target Prediction with AlphaFold [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7817349.svg)](https://doi.org/10.5281/zenodo.7817349)
 Drug-target interactions (DTIs) refer to the interactions of chemical compounds and biological targets, 
 proteins in our case, inside the human body. They play a crucial role in drug discovery and pharmacology, 
 however, their experimental determination is time-consuming and limited due to funding and the difficulty 
